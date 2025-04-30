@@ -118,4 +118,12 @@ public class ReviewService {
 		String successMessage = "レビューを削除しました";
 		return successMessage;
 	}
+	
+	//	レビューIDから店舗エンティティを取得
+	public Restaurant obtainRestaurantFromReviewId(Integer reviewId) {
+		Review review = reviewRepository.getReferenceById(reviewId);
+		Restaurant restaurant = review.getRestaurant();
+		
+		return restaurant;
+	}
 }
