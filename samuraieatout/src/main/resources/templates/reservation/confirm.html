@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div th:replace="~{fragment :: meta}"></div>
+
+<div th:replace="~{fragment :: link}"></div>
+
+<body>
+	<div th:replace="~{fragment :: header}"></div>
+	<main>
+		<div class="container">
+			<!-- 予約フォーム -->
+			<div class="col-md-4">
+				<div class="card">
+					<div class="card-body">
+						<form method="post" th:action="@{/reservation/confirm}" th:object="${reservationConfirmForm}">
+							<input type="hidden" th:field="*{restaurantId}">
+							<input type="hidden" th:field="*{memberId}">
+							<input type="hidden" th:field="*{date}">
+							<input type="hidden" th:field="*{number}">
+
+							<div class="row">
+								<span class="col-6">日付</span>
+								<spna th:text="${stringDate}" class="col-6"></spna>
+								<!--							<span th:text="${#dates.format(*{date}, 'yyyy/MM/dd')}" class="col-6"></span>-->
+							</div>
+							<div class="row">
+								<span class="col-6">人数</span>
+								<span th:text="*{number}" class="col-6"></span>
+							</div>
+							<div class="form-group">
+								<button type="submit">予約を完了する</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
+	<div th:replace="~{fragment :: script}"></div>
+</body>
+
+</html>

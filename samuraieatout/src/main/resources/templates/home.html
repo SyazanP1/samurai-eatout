@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div th:replace="~{fragment :: meta}"></div>
+
+<div th:replace="~{fragment :: link}"></div>
+
+<body>
+	<div th:replace="~{fragment :: header}"></div>
+	<main>
+		<div class="container">
+			<!-- 検索フォーム -->
+			<div class="row">
+				<form method="get" th:action="@{/restaurant/search}">
+					<div class="input-group">
+						<input type="text" name="keywordName" placeholder="店舗名">
+						<select name="keyidCategory" class="form-select">
+							<option selected value="">
+								<p>カテゴリ</p>
+							</option>
+							<option th:each="category : ${listCategories}" th:value="${category.getId()}"
+								th:text="${category.getName()}">
+							</option>
+						</select>
+						<button type="submit">
+							検索
+						</button>
+					</div>
+				</form>
+			</div>
+			<!-- 店舗一覧 -->
+			<div class="row row-cols-lg-5 row-cols-2">
+				<div th:each="restaurant : ${listRestaurants}">
+					<a th:href="@{/restaurant/details/__${restaurant.getId()}__}" class="link-dark">
+						<div class="card">
+							<img th:src="@{/images/__${restaurant.getImageName()}__}" alt="画像">
+							<div class="card-body">
+								<h5 th:text="${restaurant.getName()}" class="card-title"></h5>
+								<p th:text="${restaurant.getFetures()}" class="card-text"></p>
+							</div>
+						</div>
+					</a>
+				</div>
+			</div>
+		</div>
+	</main>
+	<div th:replace="~{fragment :: script}"></div>
+</body>
+
+</html>

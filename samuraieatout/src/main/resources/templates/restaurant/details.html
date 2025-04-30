@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div th:replace="~{fragment :: meta}"></div>
+
+<div th:replace="~{fragment :: link}"></div>
+<!-- Flatpickr -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+<body>
+	<div th:replace="~{fragment :: header}"></div>
+	<main>
+		<div class="container">
+			<!-- 削除成功メッセージ -->
+			<div th:if="${successMessage}" class="alert alert-info">
+				<span th:text="${successMessage}"></span>
+			</div>
+			<!-- お気に入り登録 -->
+			<a href="#">お気に入り登録</a>
+			<!-- 店舗詳細 -->
+			<!-- 画像 -->
+			<div class="row">
+				<!--      <img src="画像/image1.jpg" class="w-100">-->
+				<img th:src="@{/images/__${restaurant.getImageName()}__}" class="w-100">
+			</div>
+			<div class="row">
+				<!-- 店舗説明 -->
+				<div class="container col-md-8">
+					<div class="row border-bottom">
+						<div class="col-4">
+							<span>民宿名</span>
+						</div>
+						<div class="col">
+							<span th:text="${restaurant.getName()}"></span>
+						</div>
+					</div>
+					<div class="row border-bottom">
+						<div class="col-4">
+							<span>カテゴリ</span>
+						</div>
+						<div class="col">
+							<span th:text="${category.getName()}"></span>
+						</div>
+					</div>
+					<div class="row border-bottom">
+						<div class="col-4">
+							<span>住所</span>
+						</div>
+						<div class="col">
+							<span th:text="${restaurant.getAddress()}"></span>
+						</div>
+					</div>
+					<div class="row border-bottom">
+						<div class="col-4">
+							<span>特徴</span>
+						</div>
+						<div class="col">
+							<span th:text="${restaurant.getFetures()}"></span>
+						</div>
+					</div>
+				</div>
+				<!-- 予約フォーム -->
+				<div class="col-md-4">
+					<div class="card">
+						<div class="card-body">
+							<form method="get" th:action="@{/reservation/input/__${restaurant.getId()}__}" }
+								th:object="${reservationInputForm}">
+								<div class="form-group">
+									<labe>日付選択</labe>
+									<div th:if="${#fields.hasErrors('date')}" class="text-danger" th:errors="*{date}">
+									</div>
+									<input id="flatpickrCarender" type="text" class="form-control" th:field="*{date}">
+								</div>
+								<div class="form-group">
+									<labe>人数</labe>
+									<div th:if="${#fields.hasErrors('number')}" class="text-danger"
+										th:errors="*{number}"></div>
+									<input type="number" class="form-control" th:field="*{number}">
+								</div>
+								<div class="form-group">
+									<button type="submit">予約する</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- レビュー書込みリンク-->
+			<div class="row">
+				<a th:href="@{/review/input/__${restaurant.getId()}__}">レビューを書き込む</a>
+			</div>
+			<!-- ログイン者のレビュー-->
+			<div class="row row-cols-md-2">
+				<div th:if="${myReview}" class="card">
+					<div class="card-body">
+						<div class="d-flex justify-content-between">
+							<div>
+								<h5 th:text="${myReview.getMember().getName()}"></h5>
+								<p th:text="${myReview.getScore()}"></p>
+								<p th:text="${myReview.getContent()}"></p>
+							</div>
+							<div>
+								<a th:href="@{/review/edit/__${myReview.getId()}__}">編集</a>
+								<a href="#" data-bs-toggle="modal" data-bs-target="#delete-modal">削除</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- 削除モーダル -->
+				<div class="modal" id="delete-modal">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="delete-modal">削除してもよろしいですか</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+							</div>
+							<div class="modal-footer">
+								<form method="post" th:action="@{/review/delete/__${myReview.getId()}__}">
+									<button type="submit">削除</button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- レビュー一覧 -->
+			<div class="row row-cols-md-2">
+				<div th:each="review : ${listReview}" class="card">
+					<div class="card-body">
+						<h5 th:text="${review.getMember().getName()}"></h5>
+						<p th:text="${review.getScore()}"></p>
+						<p th:text="${review.getContent()}"></p>
+					</div>
+				</div>
+			</div>
+			<!-- レビュー一覧画面へのボタン -->
+			<div class="row">
+				<div class="d-flex justify-content-center my-3">
+					<a class="btn btn-outline-info btn-sm"
+						th:href="@{/review/list/__${restaurant.getId()}__}">レビュー一覧</a>
+				</div>
+			</div>
+	</main>
+	<div th:replace="~{fragment :: script}"></div>
+</body>
+
+</html>

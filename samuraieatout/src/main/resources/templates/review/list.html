@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div th:replace="~{fragment :: meta}"></div>
+
+<div th:replace="~{fragment :: link}"></div>
+
+<body>
+	<div th:replace="~{fragment :: header}"></div>
+	<main>
+		<div class="container">
+			<!-- レビュー表示 -->
+			<div class="row row-cols-2">
+				<div th:each="review : ${pageReview}">
+					<div class="card">
+						<div class="card-body">
+							<h5 class="card-title"></h5>	
+							<p class="card-text" th:text="${review.getScore()}"></p>
+							<p class="card-text" th:text="${review.getContent()}"></p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- ページネーション -->
+			<div th:if="${pageReview.getTotalPages() > 1}" class="d-flex justify-content-center">
+				<ul class="pagination">
+					<li class="page-item">
+						<a th:if="${pageReview.isFirst()}" class="page-link disabled">前</a>
+						<a th:unless="${pageReview.isFirst()}"
+							th:href="@{/review/list/__${restaurantId}__(page = ${pageReview.getNumber()-1})}"
+							class="page-link">前</a>
+					</li>
+					<li th:each="i : ${#numbers.sequence(0, pageReview.getTotalPages()-1)}" class="page-item">
+						<a th:if="${i == pageReview.getNumber()}" th:text="${i+1}"
+							th:href="@{/review/list/__${restaurantId}__(page = ${i})}"
+							class="page-link disabled"></a>
+						<a th:unless="${i == pageReview.getNumber()}" th:text="${i+1}"
+							th:href="@{/review/list/__${restaurantId}__(page = ${i})}"
+							class="page-link"></a>
+					</li>
+					<li class="page-item">
+						<a th:if="${pageReview.isLast()}" class="page-link disabled">次</a>
+						<a th:unless="${pageReview.isLast()}"
+							th:href="@{/review/list/__${restaurantId}__(page = ${pageReview.getNumber()+1})}"
+							class="page-link">次</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</main>
+	<div th:replace="~{fragment :: script}"></div>
+</body>
+
+</html>
