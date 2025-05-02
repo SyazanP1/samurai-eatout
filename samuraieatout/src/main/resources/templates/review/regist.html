@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <div th:replace="~{fragment :: meta}"></div>
 
 <div th:replace="~{fragment :: link}"></div>
 <!-- Flatpickr -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
 <body>
 	<div th:replace="~{fragment :: header}"></div>
@@ -12,31 +14,73 @@
 		<!-- レビュー登録フォーム -->
 		<div class="container">
 			<div class="row">
+				<!-- エラー原因究明のため表示 -->
+<!--				<div th:if="${#fields.hasAnyErrors()}" class="alert alert-dange">-->
+<!--					<ul>-->
+<!--						<li th:each="err : ${#fields.allErrors()}" th:text="${err}">-->
+<!--					</ul>-->
+<!--				</div>-->
 				<h5>レビュー登録</h5>
 				<div>
-					<form th:action="@{/review/regist}" method="post" th:object="${registForm}">
-						<input type="hidden" th:field="*{restaurant}">
+					<!--					<form th:action="@{/review/regist}" method="post" th:object="${registForm}">-->
+					<!--						<input type="hidden" th:field="*{restaurant}">-->
+					<!--						<div class="form-group">-->
+					<!--							<div class="row mb-3">-->
+					<!--								<label class="col-form-label col-2">点数</label>-->
+					<!--								<select class="form-select-sm col-1" th:field="*{score}">-->
+					<!--									<option value="1">1</option>-->
+					<!--									<option value="2">2</option>-->
+					<!--									<option value="3">3</option>-->
+					<!--									<option value="4">4</option>-->
+					<!--									<option value="5">5</option>-->
+					<!--								</select>-->
+					<!--							</div>-->
+					<!--							<div class="row">-->
+					<!--								<label class="col-form-label col-2">内容</label>-->
+					<!--								<div th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></div>-->
+					<!--								<textarea class="col-form-control col-10" rows="10" th:field="*{content}"></textarea>-->
+					<!--							</div>-->
+					<!--							<div class="form-group text-center mt-5">-->
+					<!--								<button type="submit" class="btn-dark">登録する</button>-->
+					<!--							</div>-->
+					<!--						</div>-->
+					<!--					</form>-->
+					<form th:action="@{/review/regist}" method="post"
+						th:object="${reviewRegistForm}">
+						<input type="hidden" th:field="*{restaurant.id}">
+						<!-- 修正点: restaurant.id -->
+
+						<!-- 点数選択 -->
 						<div class="form-group">
 							<div class="row mb-3">
-								<label class="col-form-label col-2">点数</label>
-								<select class="form-select-sm col-1" th:field="*{score}">
-									<option value="1">1</option>
-									<option value="2">2</option>
-									<option value="3">3</option>
-									<option value="4">4</option>
-									<option value="5">5</option>
+								<label class="col-form-label col-2">点数</label> <select
+									class="form-select-sm col-1" th:field="*{score}">
+									<option value="">選択してください</option>
+									<!-- 必須バリデーション用 -->
+									<option th:each="i : ${#numbers.sequence(1,5)}" th:value="${i}"
+										th:text="${i}"></option>
 								</select>
+								<!-- エラーメッセージ表示 -->
+								<small class="text-danger" th:if="${#fields.hasErrors('score')}"
+									th:errors="*{score}"></small>
 							</div>
-							<div class="row">
+
+							<!-- 内容入力 -->
+							<div class="row mb-3">
 								<label class="col-form-label col-2">内容</label>
-								<div th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></div>
-								<textarea class="col-form-control col-10" rows="10" th:field="*{content}"></textarea>
+								<textarea class="col-form-control col-10" rows="10"
+									th:field="*{content}"></textarea>
+								<!-- エラーメッセージ表示 -->
+								<small class="text-danger"
+									th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></small>
 							</div>
+
 							<div class="form-group text-center mt-5">
 								<button type="submit" class="btn-dark">登録する</button>
 							</div>
 						</div>
 					</form>
+
 				</div>
 			</div>
 		</div>

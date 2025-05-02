@@ -56,28 +56,32 @@ public class ReviewController {
 			Model model) {
 
 		Restaurant restaurant = restaurantService.obtainRestaurant(restaurantId);
-		ReviewRegistForm registForm = reviewService.createRegistFrom(restaurant);
+		ReviewRegistForm reviewRegistForm = reviewService.createRegistFrom(restaurant);
 
-		model.addAttribute("registForm", registForm);
+		model.addAttribute("reviewRegistForm", reviewRegistForm);
 		return "review/regist";
 	}
 
 	@PostMapping("/regist")
-	public String registReview(@ModelAttribute @Validated ReviewRegistForm registForm,
+	public String registReview(@ModelAttribute @Validated ReviewRegistForm reviewRegistForm,
 			BindingResult bindingResult,
 			@AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
+			RedirectAttributes redirectAttributes,
 			Model model) {
 
-		Integer restaurantId = registForm.getRestaurant().getId();
+		Integer restaurantId = reviewRegistForm.getRestaurant().getId();
 
 		if (bindingResult.hasErrors()) {
-			//	エラー発生中
-			//			model.addAttribute("registForm", registForm);
+			//	エラー原因究明のため追加
+			bindingResult.getAllErrors().forEach(error -> {
+				System.out.println(error.toString());
+			});
 			return "review/regist";
 		}
 
-		reviewService.registReview(registForm, userDetailsImpl);
-		model.addAttribute("successMessage", "レビューが投稿されました。");
+		reviewService.registReview(reviewRegistForm, userDetailsImpl);
+		//		model.addAttribute("successMessage", "レビューが投稿されました。");
+		redirectAttributes.addAttribute("successMessage", "レビューが投稿されました。");
 		return "redirect:/review/list/" + restaurantId;
 	}
 
@@ -90,26 +94,33 @@ public class ReviewController {
 		//		Review review = reviewService.obtainMyReview(restaurant, userDetailsImpl);
 		Review review = reviewService.obtainEditReview(reviewId);
 
-		ReviewEditForm editForm = reviewService.showEditReview(review);
+		ReviewEditForm reviewEditForm = reviewService.showEditReview(review);
 
-		model.addAttribute("editForm", editForm);
+		model.addAttribute("reviewEditForm", reviewEditForm);
 		return "review/edit";
 	}
 
 	@PostMapping("/update")
-	public String updateReview(@ModelAttribute @Validated ReviewEditForm editForm,
+	public String updateReview(@ModelAttribute @Validated ReviewEditForm reviewEditForm,
 			BindingResult bindingResult,
 			Model model) {
 
 		if (bindingResult.hasErrors()) {
-			model.addAttribute("editForm", editForm);
+			//	エラー原因究明のため追加
+			bindingResult.getAllErrors().forEach(error -> {
+				System.out.println(error.toString());
+			});
+		}
+
+		if (bindingResult.hasErrors()) {
+//			model.addAttribute("editForm", editForm);
 			return "review/edit";
 		}
 
-		String successMessage = reviewService.updateEditReview(editForm);
+		String successMessage = reviewService.updateEditReview(reviewEditForm);
 
 		model.addAttribute("successMessage", successMessage);
-		model.addAttribute("editForm", editForm);
+		model.addAttribute("reviewEditForm", reviewEditForm);
 		return "review/edit";
 	}
 
@@ -122,8 +133,8 @@ public class ReviewController {
 
 		redirectAttributes.addFlashAttribute("successMessage", successMessage);
 
-//		URLに変数を含めるためには、@RequestMappingがその変数を含んでいる必要があるため、今回は以下の形式では不可となる
-//		return "redirect:/restaurant/details/{restaurantId}";
+		//		URLに変数を含めるためには、@RequestMappingがその変数を含んでいる必要があるため、今回は以下の形式では不可となる
+		//		return "redirect:/restaurant/details/{restaurantId}";
 		return "redirect:/restaurant/details/" + restaurant.getId();
 	}
 }
