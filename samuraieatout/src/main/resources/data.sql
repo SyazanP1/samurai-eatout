@@ -43,14 +43,14 @@ INSERT IGNORE INTO authorities VALUES (2,'paid');
 INSERT IGNORE INTO authorities VALUES (9,'management');
 
 --members
-INSERT IGNORE INTO members VALUES (1,1,'1@a.co.jp','a','無料会員',TRUE);
-INSERT IGNORE INTO members VALUES (2,1,'2@a.co.jp','a','無料会員',TRUE);
-INSERT IGNORE INTO members VALUES (3,2,'3@a.co.jp','a','有料会員',TRUE);
-INSERT IGNORE INTO members VALUES (4,2,'4@a.co.jp','a','有料会員',TRUE);
-INSERT IGNORE INTO members VALUES (5,2,'5@a.co.jp','a','有料会員',TRUE);
-INSERT IGNORE INTO members VALUES (6,2,'6@a.co.jp','a','有料会員',TRUE);
-INSERT IGNORE INTO members VALUES (7,2,'7@a.co.jp','a','有料会員',TRUE);
-INSERT IGNORE INTO members VALUES (8,9,'8@a.co.jp','a','管理者',TRUE);
+INSERT IGNORE INTO members VALUES (1,1,'1@a.co.jp','a','無料会員');
+INSERT IGNORE INTO members VALUES (2,1,'2@a.co.jp','a','無料会員');
+INSERT IGNORE INTO members VALUES (3,2,'3@a.co.jp','a','有料会員');
+INSERT IGNORE INTO members VALUES (4,2,'4@a.co.jp','a','有料会員');
+INSERT IGNORE INTO members VALUES (5,2,'5@a.co.jp','a','有料会員');
+INSERT IGNORE INTO members VALUES (6,2,'6@a.co.jp','a','有料会員');
+INSERT IGNORE INTO members VALUES (7,2,'7@a.co.jp','a','有料会員');
+INSERT IGNORE INTO members VALUES (8,9,'8@a.co.jp','a','管理者');
 
 --reviews
 INSERT IGNORE INTO reviews (id, restaurant_id, member_id, score, content) VALUES (1,1,1,1,'レビュー内容1');

@@ -25,7 +25,6 @@ CREATE TABLE IF NOT EXISTS members
    email VARCHAR (30) NOT NULL,
    password VARCHAR (30) NOT NULL,
    name VARCHAR (30) NOT NULL,
-   enable BOOLEAN NOT NULL,
    FOREIGN KEY (authority_id) REFERENCES authorities (id)
 );
 CREATE TABLE IF NOT EXISTS reviews
@@ -53,12 +52,5 @@ member_id INT NOT NULL,
 date DATETIME NOT NULL,
 number INT NOT NULL,
 FOREIGN KEY (restaurant_id) REFERENCES restaurants (id),
-FOREIGN KEY (member_id) REFERENCES members (id)
-);
-CREATE TABLE IF NOT EXISTS certifications
-(
-id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-member_id INT NOT NULL,
-token VARCHAR(255) NOT NULL,
 FOREIGN KEY (member_id) REFERENCES members (id)
 );

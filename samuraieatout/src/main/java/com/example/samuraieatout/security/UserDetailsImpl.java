@@ -56,7 +56,6 @@ public class UserDetailsImpl implements UserDetails{
 	
 	@Override
 	public boolean isEnabled() {
-		//	メール認証に成功しているメンバーのみログイン可能
-		return member.getEnable();
+		return true;
 	}
 }

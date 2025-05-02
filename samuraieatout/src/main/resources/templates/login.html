@@ -1,34 +1,16 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org"
-	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <div th:replace="~{fragment :: meta}"></div>
 
 <div th:replace="~{fragment :: link}"></div>
 <body>
 	<div th:replace="~{fragment :: header}"></div>
 	<main>
-		<!-- 認証メール送信メッセージ -->
-		<div class="container">
-			<div th:if=${sendMailMessage} class="alert alert-info">
-				<span th:text="${sendMailMessage}"></span>	
-			</div>
-		</div>
-		<!-- 認証成功（会員登録完了）のメッセージ -->
-		<div class="container">
-			<div th:if=${successMessage} class="alert alert-info">
-				<span th:text="${successMessage}"></span>	
-			</div>
-		</div>
-		<!-- 認証失敗のメッセージ -->
-		<div class="container">
-			<div th:if=${errorMessage} class="alert alert-danger">
-				<span th:text="${errorMessage}"></span>	
-			</div>
-		</div>
-		<!-- ログイン失敗メッセージ -->
+		<!-- ログイン -->
 		<div class="container">
 			<div th:if="${param.error}" class="alert alert-info">
-				ログインに失敗しました。ユーザー名またはパスワードを再確認してください。</div>
+				ログインに失敗しました。ユーザー名またはパスワードを再確認してください。
+			</div>
 		</div>
 		<!-- ログインフォーム -->
 		<div class="container">
@@ -37,12 +19,10 @@
 					<h1 class="text-center">ログイン</h1>
 					<form th:action="@{/login}" method="post">
 						<div class="form-group">
-							<input type="text" class="form-control" name="username"
-								placeholder="メールアドレス">
+							<input type="text" class="form-control" name="username" placeholder="メールアドレス">
 						</div>
 						<div class="form-group">
-							<input type="password" class="form-control" name="password"
-								placeholder="パスワード">
+							<input type="password" class="form-control" name="password" placeholder="パスワード">
 						</div>
 						<div class="form-group d-flex justify-content-center">
 							<button type="submit" class="btn-dark">ログイン</button>
