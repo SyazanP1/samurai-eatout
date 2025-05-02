@@ -6,33 +6,24 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "members")
+@Table(name = "certifications")
 @Data
-public class Member {
+public class Certification {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Integer id;
 	
-	@ManyToOne
-	@JoinColumn(name = "authority_id")
-	private Authority authority;
+	@OneToOne
+	@JoinColumn(name = "member_id")
+	private Member member;
 	
-	@Column(name = "email")
-	private String email;
-	
-	@Column(name = "password")
-	private String password;
-	
-	@Column(name = "name")
-	private String name;
-	
-	@Column(name = "enable")
-	private Boolean enable;
+	@Column(name = "token")
+	private String token;
 }
