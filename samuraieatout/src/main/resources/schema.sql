@@ -47,18 +47,28 @@ CREATE TABLE IF NOT EXISTS reviews
 );
 CREATE TABLE IF NOT EXISTS reservations
 (
-id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-restaurant_id INT NOT NULL,
-member_id INT NOT NULL,
-date DATETIME NOT NULL,
-number INT NOT NULL,
-FOREIGN KEY (restaurant_id) REFERENCES restaurants (id),
-FOREIGN KEY (member_id) REFERENCES members (id)
+   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   restaurant_id INT NOT NULL,
+   member_id INT NOT NULL,
+   date DATETIME NOT NULL,
+   number INT NOT NULL,
+   FOREIGN KEY (restaurant_id) REFERENCES restaurants (id),
+   FOREIGN KEY (member_id) REFERENCES members (id)
 );
 CREATE TABLE IF NOT EXISTS certifications
 (
-id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-member_id INT NOT NULL,
-token VARCHAR(255) NOT NULL,
-FOREIGN KEY (member_id) REFERENCES members (id)
+   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   member_id INT NOT NULL,
+   token VARCHAR (255) NOT NULL,
+   FOREIGN KEY (member_id) REFERENCES members (id)
+);
+CREATE TABLE IF NOT EXISTS localstripes
+(
+   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   member_id INT NOT NULL,
+   customer_id VARCHAR(255) NOT NULL,
+   subscription_id VARCHAR(255) NOT NULL,
+   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+   FOREIGN KEY (member_id) REFERENCES members (id)
 );

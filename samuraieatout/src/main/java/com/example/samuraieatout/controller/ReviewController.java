@@ -56,20 +56,23 @@ public class ReviewController {
 			Model model) {
 
 		Restaurant restaurant = restaurantService.obtainRestaurant(restaurantId);
-		ReviewRegistForm reviewRegistForm = reviewService.createRegistFrom(restaurant);
+//		ReviewRegistForm reviewRegistForm = reviewService.createRegistFrom(restaurant);
+		ReviewRegistForm registForm = reviewService.createRegistFrom(restaurant);
 
-		model.addAttribute("reviewRegistForm", reviewRegistForm);
+//		model.addAttribute("reviewRegistForm", reviewRegistForm);
+		model.addAttribute("registForm", registForm);
 		return "review/regist";
 	}
 
 	@PostMapping("/regist")
-	public String registReview(@ModelAttribute @Validated ReviewRegistForm reviewRegistForm,
+//	public String registReview(@ModelAttribute @Validated ReviewRegistForm reviewRegistForm,
+	public String registReview(@ModelAttribute("registForm") @Validated ReviewRegistForm registForm,
 			BindingResult bindingResult,
 			@AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
 			RedirectAttributes redirectAttributes,
 			Model model) {
 
-		Integer restaurantId = reviewRegistForm.getRestaurant().getId();
+		Integer restaurantId = registForm.getRestaurant().getId();
 
 		if (bindingResult.hasErrors()) {
 			//	エラー原因究明のため追加
@@ -79,7 +82,7 @@ public class ReviewController {
 			return "review/regist";
 		}
 
-		reviewService.registReview(reviewRegistForm, userDetailsImpl);
+		reviewService.registReview(registForm, userDetailsImpl);
 		//		model.addAttribute("successMessage", "レビューが投稿されました。");
 		redirectAttributes.addAttribute("successMessage", "レビューが投稿されました。");
 		return "redirect:/review/list/" + restaurantId;

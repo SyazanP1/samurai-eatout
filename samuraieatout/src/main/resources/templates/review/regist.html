@@ -46,7 +46,8 @@
 					<!--						</div>-->
 					<!--					</form>-->
 					<form th:action="@{/review/regist}" method="post"
-						th:object="${reviewRegistForm}">
+						th:object="${registForm}">
+<!--						th:object="${reviewRegistForm}">-->
 						<input type="hidden" th:field="*{restaurant.id}">
 						<!-- 修正点: restaurant.id -->
 
