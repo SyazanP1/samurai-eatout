@@ -7,6 +7,7 @@ import org.springframework.validation.FieldError;
 
 import com.example.samuraieatout.entity.Authority;
 import com.example.samuraieatout.entity.Member;
+import com.example.samuraieatout.event.ResetPasswordEventPublisher;
 import com.example.samuraieatout.event.SignupEventPublisher;
 import com.example.samuraieatout.form.EditMemberForm;
 import com.example.samuraieatout.repository.AuthorityRepository;
@@ -21,12 +22,14 @@ public class MemberService {
 	final private AuthorityRepository authorityRepository;
 	final private PasswordEncoder passwordEncoder;
 	final private SignupEventPublisher signupEventPublisher;
+	final private ResetPasswordEventPublisher resetPasswordEventPublisher;
 	
-	public MemberService(MemberRepository memberRepository, AuthorityRepository authorityRepository, PasswordEncoder passwordEncoder, SignupEventPublisher signupEventPublisher) {
+	public MemberService(MemberRepository memberRepository, AuthorityRepository authorityRepository, PasswordEncoder passwordEncoder, SignupEventPublisher signupEventPublisher, ResetPasswordEventPublisher resetPasswordEventPublisher) {
 		this.memberRepository = memberRepository;
 		this.authorityRepository = authorityRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.signupEventPublisher = signupEventPublisher;
+		this.resetPasswordEventPublisher = resetPasswordEventPublisher;
 	}
 
 	//	仮会員登録
@@ -86,12 +89,12 @@ public class MemberService {
 	public BindingResult addErrorBindingResult(BindingResult bindingResult, String email, String password, String passwordConfirm) {
 		
 		//	メールアドレスが重複する場合エラーを追加
-		if (isEmailRegisterd(email)) {
+		if (email != null && isEmailRegisterd(email)) {
 			FieldError fieldError = new FieldError(bindingResult.getObjectName(), "email", "既に登録済みのメールアドレスです");
 			bindingResult.addError(fieldError);
 		}
 		//	パスワードが一致しない場合エラーを追加
-		if (!isSamePassword(password, passwordConfirm)) {
+		if (password != null && !isSamePassword(password, passwordConfirm)) {
 			FieldError fieldError = new FieldError(bindingResult.getObjectName(), "password", "パスワードが一致しません");
 			bindingResult.addError(fieldError);
 		}
@@ -129,5 +132,45 @@ public class MemberService {
 		}
 		return false;
 	}
+	
+	//	エラー内容を追加
+	public BindingResult addErrorBindingResultForResetPassword(BindingResult bindingResult, String email) {
+		
+		//	メールアドレスがメンバーとして存在すること
+		if (!email.isEmpty() && !isEmailRegisterd(email)) {
+			FieldError fieldError = new FieldError(bindingResult.getObjectName(), "email", "このメールアドレスは登録されていません。");
+			bindingResult.addError(fieldError);
+		}
+		return bindingResult;
+	}
+	
+	//	パスワードリセット リセット用メールの送信
+	public void publishResetMailEvent(Member member, HttpServletRequest httpServletRequest) {
+
+		String requestUrl = new String(httpServletRequest.getRequestURL());
+		resetPasswordEventPublisher.publishResetPasswordEvent(member, requestUrl);
+	}
+	
+	//	パスワードリセット 新しいパスワードでDBを更新
+	@Transactional
+	public void updateResetPassword(Member member, String password) {
+		
+		member.setPassword(passwordEncoder.encode(password));
+		memberRepository.save(member);
+	}
+	
+	//	メールアドレスからMemberを取得
+	public Member obtainMemberFromEmail(String email) {
+		Member member = memberRepository.findByEmail(email);
+		return member;
+	}
+	
+	// メールアドレス変更　新パスワードをDBに仮保存
+
+//	@Transactional
+//	public void saveTemporaryPassword(Member member, String email) {
+//		member.setTemporaryEmail(email);
+//		memberRepository.save(member);
+//	}
 	
 }
