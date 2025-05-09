@@ -94,6 +94,7 @@ public class StripeService {
 				//	テスト用に固定値を入れている
 				//				.setCustomer("cus_SF2y5SPZAWZl9Q")
 				.setCustomer(localStripe.getCustomerId())
+				.setReturnUrl("http://localhost:8080/login")
 				.build();
 
 		com.stripe.model.billingportal.Session session = com.stripe.model.billingportal.Session.create(params);

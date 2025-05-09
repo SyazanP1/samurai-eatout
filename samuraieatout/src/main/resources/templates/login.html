@@ -7,6 +7,24 @@
 <body>
 	<div th:replace="~{fragment :: header}"></div>
 	<main>
+		<!-- パスワードリセット完了時メッセージ -->
+		<div class="container">
+			<div th:if=${successResetPassword} class="alert alert-info">
+				<span th:text="${successResetPassword}"></span>	
+			</div>
+		</div>
+		<!-- パスワードリセット用URL不正時のメッセージ -->
+		<div class="container">
+			<div th:if=${errorResetPasswordMessage} class="alert alert-danger">
+				<span th:text="${errorResetPasswordMessage}"></span>	
+			</div>
+		</div>
+		<!-- パスワード再設定用メール送信メッセージ -->
+		<div class="container">
+			<div th:if=${successSendEmail} class="alert alert-info">
+				<span th:text="${successSendEmail}"></span>	
+			</div>
+		</div>
 		<!-- 認証メール送信メッセージ -->
 		<div class="container">
 			<div th:if=${sendMailMessage} class="alert alert-info">
