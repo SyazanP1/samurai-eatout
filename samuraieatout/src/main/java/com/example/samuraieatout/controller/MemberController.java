@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.samuraieatout.entity.Member;
+import com.example.samuraieatout.form.ChangeEmailForm;
 import com.example.samuraieatout.form.EditMemberForm;
 import com.example.samuraieatout.form.ResetPasswordForm;
 import com.example.samuraieatout.form.ResetPasswordSendEmailForm;
@@ -115,12 +116,15 @@ public class MemberController {
 			HttpServletRequest httpServletRequest, Model model) throws StripeException {
 		//	Stripeの決済情報編集用ポータルサイトリンクを作成
 		Member member = userDetailsImpl.getMember();
-		String stripeUrl = stripeService.createEditPaidUrl(member, httpServletRequest);
-
 		EditMemberForm editMemberForm = new EditMemberForm(member.getId(), member.getName(), member.getEmail());
-
-		model.addAttribute("stripeUrl", stripeUrl);
 		model.addAttribute("editMemberForm", editMemberForm);
+
+		//	有料会員の場合
+		if (memberService.isAuthorityPaid(member)) {
+			String stripeUrl = stripeService.createEditPaidUrl(member, httpServletRequest);
+			model.addAttribute("stripeUrl", stripeUrl);
+		}
+
 		return "member/editMember";
 	}
 
@@ -156,20 +160,6 @@ public class MemberController {
 		return "redirect:/login";
 
 	}
-
-	//	@GetMapping("/updateMember/verify")
-	//	public String verifyUpdateMember(@RequestParam(name = "token") String token, Model model) {
-	//
-	//		Boolean orRegist = certificationService.completeRegistMember(token);
-	//
-	//		if (orRegist) {
-	//			model.addAttribute("successMessage", "メールアドレスの変更が完了しました");
-	//		} else {
-	//			model.addAttribute("errorMessage", "トークンが無効です");
-	//		}
-	//
-	//		return "login";
-	//	}
 
 	//	パスワードリセット 画面
 	@GetMapping("/member/resetPassword")
@@ -243,6 +233,52 @@ public class MemberController {
 		memberService.updateResetPassword(userDetailsImpl.getMember(), resetPasswordForm.getPassword());
 		redirectAttributes.addFlashAttribute("successResetPassword", "パスワードが再設定されました。ログインをお試しください");
 
+		return "redirect:/login";
+	}
+
+	//	メールアドレス変更	新メールアドレス入力フォームを表示
+	@GetMapping("/member/changeEmail")
+	public String changeEmail(Model model) {
+
+		ChangeEmailForm changeEmailForm = new ChangeEmailForm();
+		model.addAttribute("changeEmailForm", changeEmailForm);
+
+		return "member/changeEmail";
+	}
+
+	//	メールアドレス変更	認証メールを送信
+	@PostMapping("/member/changeEmail/input")
+	private String inputChangeEmail(@ModelAttribute @Validated ChangeEmailForm changeEmailForm, BindingResult bindingResult,
+			@AuthenticationPrincipal UserDetailsImpl userDetailsImpl, RedirectAttributes redirectAttributes,
+			HttpServletRequest httpServletRequest) {
+
+		if (bindingResult.hasErrors()) {
+			return "member/changeEmail";
+		}
+
+		memberService.saveTemporaryEmail(userDetailsImpl.getMember(), changeEmailForm.getEmail());
+		memberService.sendEmailForChangeEmail(userDetailsImpl.getMember(), httpServletRequest,
+				changeEmailForm.getEmail());
+		redirectAttributes.addFlashAttribute("sendChangeEmail",
+				"メールアドレス変更用メールを送信しました。メールに記載されたURLにアクセスして、メールアドレスの変更を完了してください。");
+
+		return "redirect:/login";
+	}
+
+	//	メールアドレス変更	認証メール記載のURLにアクセス
+	@GetMapping("/member/changeEmail/input/verify")
+	private String updateChangeEmail(@RequestParam(name = "token") String token, UserDetailsImpl userDetailsImpl,
+			RedirectAttributes redirectAttributes) {
+
+		Member member = certificationService.obtainMemberFromToken(token);
+		//	URLが有効であればメールアドレスを更新
+		if (member != null) {
+			memberService.updateEmail(member);
+			redirectAttributes.addFlashAttribute("successChangeEmail", "メールアドレスが変更されました。ログインをお試しください。");
+			return "redirect:/login";
+		}
+
+		redirectAttributes.addFlashAttribute("errorChangeEmail", "メールアドレス変更用のURLが無効です。");
 		return "redirect:/login";
 	}
 

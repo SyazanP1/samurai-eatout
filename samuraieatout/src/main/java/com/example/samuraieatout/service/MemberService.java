@@ -7,6 +7,7 @@ import org.springframework.validation.FieldError;
 
 import com.example.samuraieatout.entity.Authority;
 import com.example.samuraieatout.entity.Member;
+import com.example.samuraieatout.event.ChangeEmailEventPublisher;
 import com.example.samuraieatout.event.ResetPasswordEventPublisher;
 import com.example.samuraieatout.event.SignupEventPublisher;
 import com.example.samuraieatout.form.EditMemberForm;
@@ -23,29 +24,26 @@ public class MemberService {
 	final private PasswordEncoder passwordEncoder;
 	final private SignupEventPublisher signupEventPublisher;
 	final private ResetPasswordEventPublisher resetPasswordEventPublisher;
+	final private ChangeEmailEventPublisher changeEmailEventPublisher;
 	
-	public MemberService(MemberRepository memberRepository, AuthorityRepository authorityRepository, PasswordEncoder passwordEncoder, SignupEventPublisher signupEventPublisher, ResetPasswordEventPublisher resetPasswordEventPublisher) {
+	public MemberService(MemberRepository memberRepository, AuthorityRepository authorityRepository, PasswordEncoder passwordEncoder, SignupEventPublisher signupEventPublisher, ResetPasswordEventPublisher resetPasswordEventPublisher, ChangeEmailEventPublisher changeEmailEventPublisher) {
 		this.memberRepository = memberRepository;
 		this.authorityRepository = authorityRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.signupEventPublisher = signupEventPublisher;
 		this.resetPasswordEventPublisher = resetPasswordEventPublisher;
+		this.changeEmailEventPublisher = changeEmailEventPublisher;
+	}
+	
+	public Boolean isAuthorityPaid(Member member) {
+		if (member.getAuthority().getId() == 2) {
+			return true;
+
+		} else {
+			return false;
+		}
 	}
 
-	//	仮会員登録
-//	@Transactional
-//	public Member oooregistSignup(SignupForm signupForm) {
-//		Member member = new Member();
-//		Authority authority = authorityRepository.getReferenceById(1);
-//		
-//		member.setAuthority(authority);
-//		member.setEmail(signupForm.getEmail());
-//		member.setPassword(passwordEncoder.encode(signupForm.getPassword()));
-//		member.setName(signupForm.getName());
-//		member.setEnable(false);
-//		
-//		return memberRepository.save(member);
-//	}
 	@Transactional
 	public Member registSignup(String email, String password, String name) {
 		Member member = new Member();
@@ -165,12 +163,25 @@ public class MemberService {
 		return member;
 	}
 	
-	// メールアドレス変更　新パスワードをDBに仮保存
-
-//	@Transactional
-//	public void saveTemporaryPassword(Member member, String email) {
-//		member.setTemporaryEmail(email);
-//		memberRepository.save(member);
-//	}
+	//	メールアドレス変更 新メールアドレスをDBに仮保存
+	@Transactional
+	public void saveTemporaryEmail(Member member, String email) {
+		member.setTemporaryEmail(email);
+		memberRepository.save(member);
+	}
+	
+	//	メールアドレス変更 新メールアドレスで旧メールアドレスを更新
+	@Transactional
+	public void updateEmail(Member member) {
+		member.setEmail(member.getTemporaryEmail());
+		memberRepository.save(member);
+	}
+	
+	//	メールアドレス変更	承認用メールを送信
+	public void sendEmailForChangeEmail(Member member, HttpServletRequest httpServletRequest, String newEmail) {
+		
+		String requestUrl = new String(httpServletRequest.getRequestURL());
+		changeEmailEventPublisher.publishChangeEmailEvent(member, requestUrl, newEmail);
+	}
 	
 }

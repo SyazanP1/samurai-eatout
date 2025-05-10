@@ -7,6 +7,24 @@
 <body>
 	<div th:replace="~{fragment :: header}"></div>
 	<main>
+		<!-- メールアドレス変更失敗時メッセージ -->
+		<div class="container">
+			<div th:if=${errorChangeEmail} class="alert alert-danger">
+				<span th:text="${errorChangeEmail}"></span>	
+			</div>
+		</div>
+		<!-- メールアドレス変更成功時メッセージ -->
+		<div class="container">
+			<div th:if=${successChangeEmail} class="alert alert-info">
+				<span th:text="${successChangeEmail}"></span>	
+			</div>
+		</div>
+		<!-- メールアドレス変更用メール送信時メッセージ -->
+		<div class="container">
+			<div th:if=${sendChangeEmail} class="alert alert-info">
+				<span th:text="${sendChangeEmail}"></span>	
+			</div>
+		</div>
 		<!-- パスワードリセット完了時メッセージ -->
 		<div class="container">
 			<div th:if=${successResetPassword} class="alert alert-info">

@@ -27,6 +27,9 @@ public class Member {
 	@Column(name = "email")
 	private String email;
 	
+	@Column(name = "temporary_email")
+	private String temporaryEmail;
+	
 	@Column(name = "password")
 	private String password;
 	

@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS members
    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
    authority_id INT NOT NULL,
    email VARCHAR (30) NOT NULL,
+   temporary_email VARCHAR (30),
    password VARCHAR (30) NOT NULL,
    name VARCHAR (30) NOT NULL,
    enable BOOLEAN NOT NULL,

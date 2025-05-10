@@ -64,9 +64,13 @@
 				</div>
 			</div>
 
+			<div th:if="${stripeUrl}" class="row justify-content-center">
+				<h3>支払い情報編集画面</h3>
+				<a th:href="@{__${stripeUrl}__}">支払い編集画面へ</a>
+			</div>
 			<div class="row justify-content-center">
-				<h3>会員情報を編集する画面</h3>
-				<a th:href="@{__${stripeUrl}__}">会員情報編集画面へ</a>
+				<h3>メールアドレス変更</h3>
+				<a th:href="@{/member/changeEmail}">メールアドレス変更画面へ</a>
 			</div>
 		</div>
 	</main>
