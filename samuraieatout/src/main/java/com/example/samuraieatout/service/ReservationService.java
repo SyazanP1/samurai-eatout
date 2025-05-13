@@ -3,6 +3,8 @@ package com.example.samuraieatout.service;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.samuraieatout.entity.Member;
@@ -53,5 +55,11 @@ public class ReservationService {
 		reservation.setNumber(reservationConfirmForm.getNumber());
 		
 		reservationRepository.save(reservation);
+	}
+	
+	//	予約一覧の表示
+	public Page<Reservation> obtainAllReservation(Member member, Pageable pageable){
+		Page<Reservation> pageReservations = reservationRepository.findByMemberOrderByDateAsc(member, pageable);
+		return pageReservations;
 	}
 }

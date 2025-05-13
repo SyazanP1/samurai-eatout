@@ -2,6 +2,10 @@ package com.example.samuraieatout.controller;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.samuraieatout.entity.Category;
+import com.example.samuraieatout.entity.Reservation;
 import com.example.samuraieatout.entity.Restaurant;
 import com.example.samuraieatout.entity.Review;
 import com.example.samuraieatout.form.ReservationConfirmForm;
@@ -64,7 +69,7 @@ public class ReservationController {
 
 			//　画面下部に表示するレビュー
 //			List<Review> listReview = reviewRepository.findTop6ByRestaurantOrderByUpdatedAt(restaurant);
-			List<Review> listReview = reviewService.obtainTopReview(restaurant, userDetailsImpl);
+			List<Review> listReview = reviewService.obtainShow6Review(restaurant, userDetailsImpl);
 
 			model.addAttribute("restaurant", restaurant);
 			model.addAttribute("category", category);
@@ -74,8 +79,7 @@ public class ReservationController {
 		
 		//	日付からTを取り除いた表示用の日付
 		String stringDate = reservationService.removeWordT(reservationInputForm.getDate());
-		//　ログイン機能未実装のため、memberIdは固定値1を使用
-		ReservationConfirmForm reservationConfirmForm = new ReservationConfirmForm(restaurantId, 1, reservationInputForm.getDate(), reservationInputForm.getNumber());
+		ReservationConfirmForm reservationConfirmForm = new ReservationConfirmForm(restaurantId, userDetailsImpl.getMember().getId(), reservationInputForm.getDate(), reservationInputForm.getNumber());
 
 		model.addAttribute("reservationConfirmForm", reservationConfirmForm);
 		model.addAttribute("stringDate", stringDate);
@@ -88,6 +92,17 @@ public class ReservationController {
 		//　DBに登録
 		reservationService.registNewReservation(reservationConfirmForm);
 
-		return "redirect:/restaurant/details/" + reservationConfirmForm.getRestaurantId();
+//		return "redirect:/restaurant/details/" + reservationConfirmForm.getRestaurantId();
+		return "redirect:/reservation/list?reserved";
+	}
+	
+	@GetMapping("/list")
+	public String showReservations(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
+			Model model,
+			@PageableDefault(page = 0, size = 4, sort = "date", direction = Direction.ASC) Pageable pageable) {
+
+		Page<Reservation> pageReservations = reservationService.obtainAllReservation(userDetailsImpl.getMember(), pageable);
+		model.addAttribute("pageReservations", pageReservations);
+		return "reservation/list";
 	}
 }

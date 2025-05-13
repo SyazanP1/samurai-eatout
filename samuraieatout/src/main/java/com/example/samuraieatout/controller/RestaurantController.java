@@ -76,7 +76,7 @@ public class RestaurantController {
 		
 		//　画面下部に表示するレビュー
 //		List<Review> listReview = reviewRepository.findTop6ByRestaurantOrderByUpdatedAt(restaurant);
-		List<Review> listReview = reviewService.obtainTopReview(restaurant, userDetailsImpl);
+		List<Review> listReview = reviewService.obtainShow6Review(restaurant, userDetailsImpl);
 		
 		//	画面下部に表示するログイン者自身のレビュー
 		Review myReview = reviewService.obtainMyReview(restaurant, userDetailsImpl);
