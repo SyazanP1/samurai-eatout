@@ -1,5 +1,6 @@
 package com.example.samuraieatout.security;
 
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -18,8 +19,13 @@ public class WebSecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
 				.authorizeHttpRequests((requests) -> requests
-						.requestMatchers("/css/**", "/login", "/signup/**", "/stripe/webhook", "/member/resetPassword/**", "/member/resetPassword/inputPassword/verify/**").permitAll()
-						.requestMatchers("/admin/**").hasRole("ADMIN")
+//						参考サイト https://zenn.dev/peishim/articles/c225ac5a5eedb0
+//						.requestMatchers("/css/**", "/login", "/signup/**", "/stripe/webhook", "/member/resetPassword/**", "/member/resetPassword/inputPassword/verify/**", "/home").permitAll()
+						.requestMatchers("/home", "/login", "/restaurant/**", "/signup/**", "/member/resetPassword/**", "/stripe/webhook").permitAll()
+						//	静的リソースは誰でも閲覧可能とする
+						.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+//						.requestMatchers("/admin/**").hasRole("ADMIN")
+						.requestMatchers("/paidMember").hasAuthority("FREE")
 						.anyRequest().authenticated())
 				.formLogin((form) -> form
 						.loginPage("/login")
@@ -28,7 +34,8 @@ public class WebSecurityConfig {
 						.failureUrl("/login?error")
 						.permitAll())
 				.logout((logout) -> logout
-						.logoutSuccessUrl("/?loggedOut")
+//						.logoutSuccessUrl("/?loggedOut")	//	"/"へのアクセスに対して応答するコントローラーがを定義していないのでwhitepageエラーが発生。以下のように修正。
+						.logoutSuccessUrl("/login?loggedOut")
 						.permitAll())
 				.csrf().ignoringRequestMatchers("/stripe/webhook");
 
