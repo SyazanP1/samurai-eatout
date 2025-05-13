@@ -24,7 +24,8 @@ CREATE TABLE IF NOT EXISTS members
    authority_id INT NOT NULL,
    email VARCHAR (30) NOT NULL,
    temporary_email VARCHAR (30),
-   password VARCHAR (30) NOT NULL,
+   --password VARCHAR (30) NOT NULL,
+   password VARCHAR (255) NOT NULL,
    name VARCHAR (30) NOT NULL,
    enable BOOLEAN NOT NULL,
    FOREIGN KEY (authority_id) REFERENCES authorities (id)

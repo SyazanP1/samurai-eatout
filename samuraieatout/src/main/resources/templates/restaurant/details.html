@@ -4,10 +4,7 @@
 <div th:replace="~{fragment :: meta}"></div>
 
 <div th:replace="~{fragment :: link}"></div>
-<!-- Flatpickr -->
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-
+<div th:replace="~{fragment :: flatpickr_link}"></div>
 <body>
 	<div th:replace="~{fragment :: header}"></div>
 	<main>
@@ -62,7 +59,7 @@
 					</div>
 				</div>
 				<!-- 予約フォーム -->
-				<div class="col-md-4">
+				<div sec:authorize="hasAuthority('PAID')" class="col-md-4">
 					<div class="card">
 						<div class="card-body">
 							<form method="get"
@@ -157,6 +154,7 @@
 		</div>
 	</main>
 	<div th:replace="~{fragment :: script}"></div>
+	<div th:replace="~{fragment :: flatpickr_script}"></div>
 </body>
 
 </html>
