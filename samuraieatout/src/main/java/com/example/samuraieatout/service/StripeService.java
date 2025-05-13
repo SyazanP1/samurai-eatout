@@ -3,8 +3,10 @@ package com.example.samuraieatout.service;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.example.samuraieatout.entity.Authority;
 import com.example.samuraieatout.entity.LocalStripe;
 import com.example.samuraieatout.entity.Member;
+import com.example.samuraieatout.repository.AuthorityRepository;
 import com.example.samuraieatout.repository.LocalStripeRepository;
 import com.example.samuraieatout.repository.MemberRepository;
 import com.stripe.Stripe;
@@ -40,10 +42,12 @@ public class StripeService {
 
 	private LocalStripeRepository localStripeRepository;
 	private MemberRepository memberRepository;
+	private AuthorityRepository authorityRepository;
 
-	public StripeService(LocalStripeRepository localStripeRepository, MemberRepository memberRepository) {
+	public StripeService(LocalStripeRepository localStripeRepository, MemberRepository memberRepository, AuthorityRepository authorityRepository) {
 		this.localStripeRepository = localStripeRepository;
 		this.memberRepository = memberRepository;
+		this.authorityRepository = authorityRepository;
 	}
 
 	//	決済用のリンクを作成
@@ -85,6 +89,7 @@ public class StripeService {
 	//	https://docs.stripe.com/customer-management/integrate-customer-portal?shell=true&api=true&resource=billing_portal%20sessions&action=create&architecture-style=resources&lang=java#redirect
 	public String createEditPaidUrl(Member member, HttpServletRequest httpServletRequest) throws StripeException {
 		Stripe.apiKey = stripeApiKey;
+		String requestUrl = new String(httpServletRequest.getRequestURL());
 		LocalStripe localStripe = localStripeRepository.findByMember(member);
 		//		String requestUrl = new String(httpServletRequest.getRequestURL());
 
@@ -94,7 +99,7 @@ public class StripeService {
 				//	テスト用に固定値を入れている
 				//				.setCustomer("cus_SF2y5SPZAWZl9Q")
 				.setCustomer(localStripe.getCustomerId())
-				.setReturnUrl("http://localhost:8080/login")
+				.setReturnUrl(requestUrl.replaceAll("/editMember", "") + "/home")
 				.build();
 
 		com.stripe.model.billingportal.Session session = com.stripe.model.billingportal.Session.create(params);
@@ -152,8 +157,11 @@ public class StripeService {
 		if (!customerId.isEmpty() && !customerEmail.isEmpty() && !subscriptionId.isEmpty()) {
 
 			Member member = memberRepository.findByEmail(customerEmail);
-//			LocalStripe localStripe = localStripeRepository.findByMember(member);
+			
+			//	会員権限を有料会員に更新
+			updatePaidAuthority(member);
 
+			//	Stripe情報をローカルに保存
 			LocalStripe localStripe = new LocalStripe();
 			localStripe.setMember(member);
 			localStripe.setCustomerId(customerId);
@@ -168,4 +176,10 @@ public class StripeService {
 		}
 	}
 
+	//	会員権限を有料に更新
+	public void updatePaidAuthority(Member member) {
+		Authority authority = authorityRepository.getReferenceById(2);
+		member.setAuthority(authority);
+		memberRepository.save(member);
+	}
 }
