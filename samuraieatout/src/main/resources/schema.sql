@@ -70,7 +70,16 @@ CREATE TABLE IF NOT EXISTS localstripes
    member_id INT NOT NULL,
    customer_id VARCHAR(255) NOT NULL,
    subscription_id VARCHAR(255) NOT NULL,
+   enable Boolean NOT NULL,
    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
    FOREIGN KEY (member_id) REFERENCES members (id)
+);
+CREATE TABLE IF NOT EXISTS favorites (
+id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+restaurant_id INT NOT NULL,
+member_id INT NOT NULL,
+UNIQUE (restaurant_id, member_id),
+FOREIGN KEY (restaurant_id) REFERENCES restaurants (id),
+FOREIGN KEY (member_id) REFERENCES members (id)
 );

@@ -118,7 +118,7 @@ public class MemberService {
 		member.setPassword(passwordEncoder.encode(editMemberForm.getPassword()));
 		
 		//	メールアドレスの変更はメール認証の過程を含めるか要件等
-		member.setEmail(editMemberForm.getEmail());
+//		member.setEmail(editMemberForm.getEmail());
 		
 		memberRepository.save(member);
 	}

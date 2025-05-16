@@ -37,4 +37,7 @@ public class LocalStripe {
 	
 	@Column(name = "updated_at", insertable = false, updatable = false)
 	private Timestamp updatedAt;
+	
+	@Column(name = "enable")
+	private Boolean enable;
 }

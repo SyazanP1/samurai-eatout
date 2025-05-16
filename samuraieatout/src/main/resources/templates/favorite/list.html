@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div th:replace="~{fragment :: meta}"></div>
+
+<div th:replace="~{fragment :: link}"></div>
+
+<body>
+	<div th:replace="~{fragment :: header}"></div>
+	<main>
+		<div class="container">
+			<!-- お気に入り一覧 -->
+			<div class="row row-cols-2">
+				<h1 class="text-center">お気に入り一覧</h1>
+
+				<table class="table">
+					<thead>
+						<tr>
+							<th scope="col">店舗名</th>
+							<th scope="col"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="favorite : ${pageFavorites}">
+							<td th:text="${favorite.getRestaurant().getName()}"></td>
+							<td><a href="#" data-bs-toggle="modal"
+								th:data-bs-target="${'#delete-modal' + favorite.getRestaurant().getId()}">解除</a></td>
+							<!-- 解除モーダル -->
+							<div class="modal" th:id="${'delete-modal' + favorite.getRestaurant().getId()}" th:aria-labelledby="${'#deleteModalLable' + favorite.getRestaurant().getId()}">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h5 class="modal-title" th:id="${'deleteModalLabel' + favorite.getRestaurant().getId()}">お気に入りから解除してもよろしいですか</h5>
+											<button type="button" class="btn-close"
+												data-bs-dismiss="modal"></button>
+										</div>
+										<div class="modal-footer">
+											<form method="post" th:action="@{/favorite/delete/list/__${favorite.getRestaurant().getId()}__}">
+												<button type="submit">解除</button>
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>
+						</tr>
+					</tbody>
+				</table>
+				<!--				</div>-->
+			</div>
+			<!-- ページネーション -->
+			<div th:if="${pageFavorites.getTotalPages() > 1}"
+				class="d-flex justify-content-center">
+				<ul class="pagination">
+					<li class="page-item"><a th:if="${pageFavorites.isFirst()}"
+						class="page-link disabled">前</a> <a
+						th:unless="${pageFavorites.isFirst()}"
+						th:href="@{/favorite/list/__${restaurantId}__(page = ${pageFavorites.getNumber()-1})}"
+						class="page-link">前</a></li>
+					<li
+						th:each="i : ${#numbers.sequence(0, pageFavorites.getTotalPages()-1)}"
+						class="page-item"><a
+						th:if="${i == pageFavorites.getNumber()}" th:text="${i+1}"
+						th:href="@{/favorite/list/__${restaurantId}__(page = ${i})}"
+						class="page-link disabled"></a> <a
+						th:unless="${i == pageFavorites.getNumber()}" th:text="${i+1}"
+						th:href="@{/favorite/list/__${restaurantId}__(page = ${i})}"
+						class="page-link"></a></li>
+					<li class="page-item"><a th:if="${pageFavorites.isLast()}"
+						class="page-link disabled">次</a> <a
+						th:unless="${pageFavorites.isLast()}"
+						th:href="@{/favorite/list/__${restaurantId}__(page = ${pageFavorites.getNumber()+1})}"
+						class="page-link">次</a></li>
+				</ul>
+			</div>
+		</div>
+	</main>
+	<div th:replace="~{fragment :: script}"></div>
+</body>
+
+</html>

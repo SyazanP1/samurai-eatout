@@ -22,6 +22,7 @@ import com.example.samuraieatout.repository.CategoryRepository;
 import com.example.samuraieatout.repository.RestaurantRepository;
 import com.example.samuraieatout.repository.ReviewRepository;
 import com.example.samuraieatout.security.UserDetailsImpl;
+import com.example.samuraieatout.service.FavoriteService;
 import com.example.samuraieatout.service.RestaurantService;
 import com.example.samuraieatout.service.ReviewService;
 
@@ -33,13 +34,15 @@ public class RestaurantController {
 	private final CategoryRepository categoryRepository;
 	private final ReviewRepository reviewRepository;
 	private final ReviewService reviewService;
+	private final FavoriteService favoriteService;
 	
-	public RestaurantController(RestaurantRepository restaurantRepository, RestaurantService restaurantService, CategoryRepository categoryRepository, ReviewRepository reviewRepository, ReviewService reviewService) {
+	public RestaurantController(RestaurantRepository restaurantRepository, RestaurantService restaurantService, CategoryRepository categoryRepository, ReviewRepository reviewRepository, ReviewService reviewService, FavoriteService favoriteService) {
 		this.restaurantRepository = restaurantRepository;
 		this.restaurantService = restaurantService;
 		this.categoryRepository = categoryRepository;
 		this.reviewRepository = reviewRepository;
 		this.reviewService = reviewService;
+		this.favoriteService = favoriteService;
 	}
 
 	@GetMapping("/search")
@@ -84,11 +87,16 @@ public class RestaurantController {
 		//　予約フォーム
 		ReservationInputForm reservationInputForm = new ReservationInputForm();
 		
+		//	お気に入り
+		Boolean isFavorite = false;
+		isFavorite = favoriteService.isRegistedFavorite(userDetailsImpl, restaurant);
+		
 		model.addAttribute("restaurant", restaurant);
 		model.addAttribute("category", category);
 		model.addAttribute("listReview", listReview);
 		model.addAttribute("myReview", myReview);
 		model.addAttribute("reservationInputForm", reservationInputForm);
+		model.addAttribute("isFavorite", isFavorite);
 		return "restaurant/details";
 	}
 	

@@ -21,6 +21,7 @@ import com.example.samuraieatout.form.ResetPasswordForm;
 import com.example.samuraieatout.form.ResetPasswordSendEmailForm;
 import com.example.samuraieatout.form.SignupForm;
 import com.example.samuraieatout.security.UserDetailsImpl;
+import com.example.samuraieatout.service.AuthService;
 import com.example.samuraieatout.service.CertificationService;
 import com.example.samuraieatout.service.MemberService;
 import com.example.samuraieatout.service.StripeService;
@@ -33,12 +34,14 @@ public class MemberController {
 	private final MemberService memberService;
 	private final CertificationService certificationService;
 	private final StripeService stripeService;
+	private final AuthService authService;
 
 	public MemberController(MemberService memberService, CertificationService certificationService,
-			StripeService stripeService) {
+			StripeService stripeService, AuthService authService) {
 		this.memberService = memberService;
 		this.certificationService = certificationService;
 		this.stripeService = stripeService;
+		this.authService = authService;
 	}
 
 	@GetMapping("/signup")
@@ -90,8 +93,9 @@ public class MemberController {
 
 	//	決済処理Stripeへ遷移させる前の中継ぎ画面
 	@GetMapping("/paidMember")
-	public String reliefForStripe(HttpServletRequest httpServletRequest, Model model) throws StripeException {
-		String stripeUrl = stripeService.createRedirectUrl(httpServletRequest);
+	public String reliefForStripe(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
+			HttpServletRequest httpServletRequest, Model model) throws StripeException {
+		String stripeUrl = stripeService.createRedirectUrl(httpServletRequest, userDetailsImpl);
 
 		model.addAttribute("stripeUrl", stripeUrl);
 		return "member/paidMember";
@@ -100,13 +104,12 @@ public class MemberController {
 	//	決済処理終了後のwebhookに対して
 	@PostMapping("/stripe/webhook")
 	public ResponseEntity<Void> webhook(@RequestBody String payload,
-			@RequestHeader("Stripe-Signature") String sigHeader) throws StripeException {
+			@RequestHeader("Stripe-Signature") String sigHeader, UserDetailsImpl userDetailsImpl)
+			throws StripeException {
 
-		stripeService.obtainCustomer(payload, sigHeader);
-		stripeService.obtainSubscription(payload, sigHeader);
-
-		stripeService.saveStripeInfo();
-
+		stripeService.gainSubscribeWebhook(payload, sigHeader);
+		stripeService.gainCancelWebhook(payload, sigHeader);
+		
 		return ResponseEntity.ok().build();
 	}
 
@@ -116,7 +119,7 @@ public class MemberController {
 			HttpServletRequest httpServletRequest, Model model) throws StripeException {
 		//	Stripeの決済情報編集用ポータルサイトリンクを作成
 		Member member = userDetailsImpl.getMember();
-		EditMemberForm editMemberForm = new EditMemberForm(member.getId(), member.getName(), member.getEmail());
+		EditMemberForm editMemberForm = new EditMemberForm(member.getId(), member.getName());
 		model.addAttribute("editMemberForm", editMemberForm);
 
 		//	有料会員の場合
@@ -133,29 +136,28 @@ public class MemberController {
 			BindingResult bindingResult,
 			Model model,
 			RedirectAttributes redirectAttributes,
-			HttpServletRequest httpServletRequest) {
+			HttpServletRequest httpServletRequest,
+			@AuthenticationPrincipal UserDetailsImpl userDetailsImpl) throws StripeException {
 
 		//	メールアドレス重複、パスワード不一致の場合エラーを追加
-		bindingResult = memberService.addErrorBindingResult(bindingResult, editMemberForm.getEmail(),
-				editMemberForm.getPassword(), editMemberForm.getPasswordConfirm());
+		bindingResult = memberService.addErrorBindingResult(bindingResult, null, editMemberForm.getPassword(),
+				editMemberForm.getPasswordConfirm());
 
 		//	バリデーションエラーがあればフォームを再表示
 		if (bindingResult.hasErrors()) {
+			//	有料会員の場合
+			if (memberService.isAuthorityPaid(userDetailsImpl.getMember())) {
+				String stripeUrl = stripeService.createEditPaidUrl(userDetailsImpl.getMember(), httpServletRequest);
+				model.addAttribute("stripeUrl", stripeUrl);
+			}
 			return "member/editMember";
 		}
-		//		Member member = memberService.registSignup(editMemberForm.getEmail(), editMemberForm.getPassword(),
-		//				editMemberForm.getName());
+
 		Member member = memberService.obtainMember(editMemberForm.getId());
 		memberService.updateMember(member, editMemberForm);
 
-		if (memberService.isEmailChange(member.getEmail(), editMemberForm.getEmail())) {
-
-			//	認証メール送信イベントを発行
-			//			memberService.publishCertificateMailEvent(member, httpServletRequest);
-			//			redirectAttributes.addFlashAttribute("sendMailMessage",
-			//					"認証メールを送信しました。メールに記載されたURLにアクセスして、メールアドレスの変更を完了してください。");
-
-		}
+		//	SecurityContextを更新
+		authService.updateSecurityContext(member);
 
 		return "redirect:/login";
 
@@ -248,7 +250,8 @@ public class MemberController {
 
 	//	メールアドレス変更	認証メールを送信
 	@PostMapping("/member/changeEmail/input")
-	private String inputChangeEmail(@ModelAttribute @Validated ChangeEmailForm changeEmailForm, BindingResult bindingResult,
+	private String inputChangeEmail(@ModelAttribute @Validated ChangeEmailForm changeEmailForm,
+			BindingResult bindingResult,
 			@AuthenticationPrincipal UserDetailsImpl userDetailsImpl, RedirectAttributes redirectAttributes,
 			HttpServletRequest httpServletRequest) {
 

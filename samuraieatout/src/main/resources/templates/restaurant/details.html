@@ -14,7 +14,25 @@
 				<span th:text="${successMessage}"></span>
 			</div>
 			<!-- お気に入り登録 -->
-			<a href="#">お気に入り登録</a>
+			<!--			<a href="#">お気に入り登録</a>-->
+			<div sec:authorize="hasAuthority('PAID')">
+				<div th:if="${isFavorite}">
+					<a href="#"
+						onclick="event.preventDefault(); document.getElementById('favorite-form').submit();">&#9829;
+						お気に入り解除</a>
+					<form method="post"
+						th:action="@{/favorite/delete/__${restaurant.getId()}__}"
+						id="favorite-form" class="d-none"></form>
+				</div>
+				<div th:unless="${isFavorite}">
+					<a href="#"
+						onclick="event.preventDefault(); document.getElementById('favorite-form').submit();">&#9825;
+						お気に入り追加</a>
+					<form method="post"
+						th:action="@{/favorite/regist/__${restaurant.getId()}__}"
+						id="favorite-form" class="d-none"></form>
+				</div>
+			</div>
 			<!-- 店舗詳細 -->
 			<!-- 画像 -->
 			<div class="row">
