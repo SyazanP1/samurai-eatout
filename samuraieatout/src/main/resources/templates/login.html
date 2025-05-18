@@ -7,6 +7,13 @@
 <body>
 	<div th:replace="~{fragment :: header}"></div>
 	<main>
+		<!-- ログアウト時メッセージ -->
+		<div class="container">
+			<div th:if=${param.loggedOut} class="alert alert-info">
+				<span>ログアウトしました。</span>	
+			</div>
+		</div>
+
 		<!-- メールアドレス変更失敗時メッセージ -->
 		<div class="container">
 			<div th:if=${errorChangeEmail} class="alert alert-danger">

@@ -26,8 +26,6 @@ public class AuthService {
 	public void updateSecurityContext(Member member) {
 		//	https://spring.pleiades.io/spring-security/reference/servlet/authentication/architecture.html
 		//	https://spring.pleiades.io/spring-security/site/docs/current/api/org/springframework/security/core/context/SecurityContext.html
-//		Integer memberId = userDetailsImpl.getMember().getId();
-//		Member member = memberRepository.getReferenceById(memberId);
 		SecurityContext context = SecurityContextHolder.getContext();
 //		Authentication authentication = context.getAuthentication();
 		//	（値の例）test2@a.co.jp

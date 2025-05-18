@@ -60,8 +60,8 @@ public class StripeService {
 		String memberId = userDetailsImpl.getMember().getId().toString();
 
 		SessionCreateParams params = new SessionCreateParams.Builder()
-				.setSuccessUrl(requestUrl.replaceAll("/paidMember", "") + "/home")
-				.setCancelUrl(requestUrl.replaceAll("/paidMember", "") + "/home")
+				.setSuccessUrl(requestUrl.replaceAll("/paidMember", "") + "/logout")
+				.setCancelUrl(requestUrl.replaceAll("/paidMember", "") + "/logout")
 				.setMode(SessionCreateParams.Mode.SUBSCRIPTION)
 				.addLineItem(new SessionCreateParams.LineItem.Builder()
 						.setQuantity(1L)
@@ -88,9 +88,9 @@ public class StripeService {
 		String requestUrl = new String(httpServletRequest.getRequestURL());
 		String setUrl = "";
 		if (requestUrl.contains("edit")) {
-			setUrl = requestUrl.replaceAll("/editMember", "") + "/home";
+			setUrl = requestUrl.replaceAll("/editMember", "") + "/logout";
 		} else {
-			setUrl = requestUrl.replaceAll("/updateMember", "") + "/home";
+			setUrl = requestUrl.replaceAll("/updateMember", "") + "/logout";
 		}
 		
 		LocalStripe localStripe = localStripeRepository.findByMember(member);
@@ -135,9 +135,9 @@ public class StripeService {
 			updatePaidAuthority(member);
 			
 
-			Member updatedMember = memberRepository.getReferenceById(memberId);
+//			Member updatedMember = memberRepository.getReferenceById(memberId);
 			//	SecurityContextを更新
-			authService.updateSecurityContext(updatedMember);
+//			authService.updateSecurityContext(updatedMember);
 
 			//	Stripe情報をローカルに保存
 			//			addLocalStripeRecord(subscriptionId, customerId, memberRepository.findByEmail(customerEmail));
@@ -166,7 +166,7 @@ public class StripeService {
 			disableSubscription(member);
 			
 			//	SecurityContextを更新
-			authService.updateSecurityContext(member);
+//			authService.updateSecurityContext(member);
 		}
 
 	}

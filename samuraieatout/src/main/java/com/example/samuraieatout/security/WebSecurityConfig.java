@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -34,6 +35,8 @@ public class WebSecurityConfig {
 						.failureUrl("/login?error")
 						.permitAll())
 				.logout((logout) -> logout
+						//	Getメソッドでログアウトできるようにする
+						.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
 //						.logoutSuccessUrl("/?loggedOut")	//	"/"へのアクセスに対して応答するコントローラーがを定義していないのでwhitepageエラーが発生。以下のように修正。
 						.logoutSuccessUrl("/login?loggedOut")
 						.permitAll())
