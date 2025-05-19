@@ -56,7 +56,8 @@ public class RestaurantController {
 		Page<Restaurant> pageRestaurants = restaurantService.searchRestaurant(keywordName, keyidCategory, pageable);
 		
 		// カテゴリ検索　セレクトボックス用
-		List<Category> listCategories = categoryRepository.findByOrderByIdAsc();
+//		List<Category> listCategories = categoryRepository.findByOrderByIdAsc();
+		List<Category> listCategories = categoryRepository.findByEnableNotOrderByIdAsc(false);
 		
 		// カテゴリ検索　前回検索条件表示用
 //		String keywordCategory = restaurantService.searcedCategoryName(keyidCategory);

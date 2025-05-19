@@ -1,9 +1,9 @@
 -- categories
-INSERT IGNORE INTO categories VALUES (1,'和食');
-INSERT IGNORE INTO categories VALUES (2,'中華');
-INSERT IGNORE INTO categories VALUES (3,'洋食');
-INSERT IGNORE INTO categories VALUES (4,'イタリア料理');
-INSERT IGNORE INTO categories VALUES (5,'フランス料理');
+INSERT IGNORE INTO categories VALUES (1,'和食',true);
+INSERT IGNORE INTO categories VALUES (2,'中華',true);
+INSERT IGNORE INTO categories VALUES (3,'洋食',true);
+INSERT IGNORE INTO categories VALUES (4,'イタリア料理',true);
+INSERT IGNORE INTO categories VALUES (5,'フランス料理',true);
 
 -- restaurants
 INSERT IGNORE INTO restaurants VALUES (1,1,'店舗名その1','image1.jpg','住所その1','店舗の特徴について1');

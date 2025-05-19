@@ -17,7 +17,7 @@ public class CategoryService {
 	
 	//	カテゴリ選択用セレクトボックスのため
 	public List<Category> obtainCategory(){
-		List<Category> listCategory = categoryRepository.findByOrderByIdAsc();
+		List<Category> listCategory = categoryRepository.findByEnableNotOrderByIdAsc(false);
 		return listCategory;
 	}
 }

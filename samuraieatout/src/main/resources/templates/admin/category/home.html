@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div th:replace="~{fragment :: meta}"></div>
+
+<div th:replace="~{fragment :: link}"></div>
+
+<body>
+
+	<div th:replace="~{fragment :: header}"></div>
+	<main>
+		<div class="container">
+			<!-- カテゴリ削除完了時メッセージ -->
+			<div th:if="${deleteMessage}" class="row alert alert-info">
+				<span th:text="${deleteMessage}"></span>
+			</div>
+			<!-- カテゴリ更新完了時メッセージ -->
+			<div th:if="${updateMessage}" class="row alert alert-info">
+				<span th:text="${updateMessage}"></span>
+			</div>
+			<!-- カテゴリ登録完了時メッセージ -->
+			<div th:if="${registMessage}" class="row alert alert-info">
+				<span th:text="${registMessage}"></span>
+			</div>
+			<!-- 検索フォーム -->
+			<div class="row">
+				<form method="get" th:action="@{/admin/category}">
+					<div class="input-group">
+						<input type="text" name="keywordName" th:value="${keywordName}"
+							placeholder="カテゴリ名">
+						<button type="submit">検索</button>
+					</div>
+				</form>
+			</div>
+			<table class="table">
+				<thead>
+					<tr>
+						<th scope="col">ID</th>
+						<th scope="col">カテゴリ名</th>
+						<th scope="col">状態</th>
+						<th scope="col"></th>
+						<th scope="col"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="category : ${pageCategory}">
+						<td th:text="${category.getId()}"></td>
+						<td th:text="${category.getName()}"></td>
+						<td th:if="${category.getEnable() == true}">有効</td>
+						<td th:if="${category.getEnable() == false}">無効</td>
+						<td><a th:href="@{/admin/category/edit/__${category.getId()}__}">編集</a></td>
+						<td><a th:if="${category.getEnable() == true}" href="#" data-bs-toggle="modal" th:data-bs-target="${'#delete' + category.getId()}">無効にする</a></td>
+						
+						<!-- 削除モーダル -->
+						<div class="modal fade" th:id="${'delete' + category.getId()}" tabindex="-1" th:aria-labelledby="${'#deleteLabel' + category.getId()}">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" th:id="${'deleteLabel' + category.getId()}" th:text="${category.getName() + 'を無効にしますか'}"></h5>	
+										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-labe="閉じる"></button>
+									</div>	
+									<div class="modal-footer">
+										<form method="post" th:action="@{/admin/category/delete/__${category.getId()}__}">
+											<button type="submit" class="btn">無効にする</button>	
+										</form>
+									</div>
+								</div>	
+							</div>
+						</div>
+					</tr>
+				</tbody>
+			</table>
+			<!-- ページネーション -->
+			<div th:if="${pageCategory.getTotalPages() > 1}"
+				class="d-flex justify-content-center">
+				<ul class="pagination">
+					<li class="page-item"><a th:if="${pageCategory.isFirst()}"
+						class="page-link disabled">前</a> <a
+						th:unless="${pageCategory.isFirst()}"
+						th:href="@{/admin/category(page = ${pageCategory.getNumber()-1}, keywordName = ${keywordName})}"
+						class="page-link">前</a></li>
+					<li
+						th:each="i : ${#numbers.sequence(0, pageCategory.getTotalPages()-1)}"
+						class="page-item"><a
+						th:if="${i == pageCategory.getNumber()}" th:text="${i+1}"
+						th:href="@{/admin/category(page = ${i}, keywordName = ${keywordName})}"
+						class="page-link disabled"></a> <a
+						th:unless="${i == pageCategory.getNumber()}" th:text="${i+1}"
+						th:href="@{/admin/category(page = ${i}, keywordName = ${keywordName})}"
+						class="page-link"></a></li>
+					<li class="page-item"><a th:if="${pageCategory.isLast()}"
+						class="page-link disabled">次</a> <a
+						th:unless="${pageCategory.isLast()}"
+						th:href="@{/admin/category(page = ${pageCategory.getNumber()+1}, keywordName = ${keywordName})}"
+						class="page-link">次</a></li>
+				</ul>
+			</div>
+		</div>
+	</main>
+	<div th:replace="~{fragment :: script}"></div>
+</body>
+
+</html>

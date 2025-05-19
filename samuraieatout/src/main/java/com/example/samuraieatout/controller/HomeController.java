@@ -29,7 +29,8 @@ public class HomeController {
 		
 		
 		// カテゴリ検索　セレクトボックス用
-		List<Category> listCategories = categoryRepository.findByOrderByIdAsc();
+//		List<Category> listCategories = categoryRepository.findByOrderByIdAsc();
+		List<Category> listCategories = categoryRepository.findByEnableNotOrderByIdAsc(false);
 		
 		model.addAttribute("listRestaurants", listRestaurants);
 		model.addAttribute("listCategories", listCategories);

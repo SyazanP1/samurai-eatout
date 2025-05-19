@@ -22,7 +22,7 @@ public class WebSecurityConfig {
 				.authorizeHttpRequests((requests) -> requests
 //						参考サイト https://zenn.dev/peishim/articles/c225ac5a5eedb0
 //						.requestMatchers("/css/**", "/login", "/signup/**", "/stripe/webhook", "/member/resetPassword/**", "/member/resetPassword/inputPassword/verify/**", "/home").permitAll()
-						.requestMatchers("/home", "/login", "/restaurant/**", "/signup/**", "/member/resetPassword/**", "/stripe/webhook", "/admin/restaurant/**").permitAll()
+						.requestMatchers("/home", "/login", "/restaurant/**", "/signup/**", "/member/resetPassword/**", "/stripe/webhook", "/admin/restaurant/**", "/admin/category/**").permitAll()
 						//	静的リソースは誰でも閲覧可能とする
 						.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
 						.requestMatchers("/admin/**").hasRole("ADMIN")

@@ -21,4 +21,6 @@ public class Category {
 	@Column(name = "name")
 	private String name;
 
+	@Column(name = "enable")
+	private Boolean enable;
 }
