@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div th:replace="~{fragment :: meta}"></div>
+
+<div th:replace="~{fragment :: link}"></div>
+
+<body>
+
+	<div th:replace="~{fragment :: header}"></div>
+	<main>
+		<div class="container">
+			<!-- 検索フォーム -->
+			<div class="row">
+				<form method="get" th:action="@{/admin/member}">
+					<div class="input-group">
+						<input type="text" name="keywordName" th:value="${keywordName}"
+							placeholder="店舗名">
+						<button type="submit">検索</button>
+					</div>
+				</form>
+			</div>
+			<table class="table">
+				<thead>
+					<tr>
+						<th scope="col">ID</th>
+						<th scope="col">氏名</th>
+						<th scope="col">権限</th>
+						<th scope="col">メールアドレス</th>
+						<th scope="col">状態</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="member : ${pageMember}">
+						<td th:text="${member.getId()}"></td>
+						<td th:text="${member.getName()}"></td>
+						<td th:text="${member.getAuthority().getName()}"></td>
+						<td th:text="${member.getEmail()}"></td>
+						<td th:if="${member.getEnable()}">有効</td>
+						<td th:unless="${member.getEnable()}">無効</td>
+					</tr>
+				</tbody>
+			</table>
+			<!-- ページネーション -->
+			<div th:if="${pageMember.getTotalPages() > 1}"
+				class="d-flex justify-content-center">
+				<ul class="pagination">
+					<li class="page-item"><a th:if="${pageMember.isFirst()}"
+						class="page-link disabled">前</a> <a
+						th:unless="${pageMember.isFirst()}"
+						th:href="@{/admin/member(page = ${pageMember.getNumber()-1}, keywordName = ${keywordName})}"
+						class="page-link">前</a></li>
+					<li
+						th:each="i : ${#numbers.sequence(0, pageMember.getTotalPages()-1)}"
+						class="page-item"><a
+						th:if="${i == pageMember.getNumber()}" th:text="${i+1}"
+						th:href="@{/admin/member(page = ${i}, keywordName = ${keywordName})}"
+						class="page-link disabled"></a> <a
+						th:unless="${i == pageMember.getNumber()}" th:text="${i+1}"
+						th:href="@{/admin/member(page = ${i}, keywordName = ${keywordName})}"
+						class="page-link"></a></li>
+					<li class="page-item"><a th:if="${pageMember.isLast()}"
+						class="page-link disabled">次</a> <a
+						th:unless="${pageMember.isLast()}"
+						th:href="@{/admin/member(page = ${pageMember.getNumber()+1}, keywordName = ${keywordName})}"
+						class="page-link">次</a></li>
+				</ul>
+			</div>
+		</div>
+	</main>
+	<div th:replace="~{fragment :: script}"></div>
+</body>
+
+</html>
