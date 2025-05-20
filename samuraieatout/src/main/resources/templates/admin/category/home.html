@@ -24,13 +24,16 @@
 			</div>
 			<!-- 検索フォーム -->
 			<div class="row">
-				<form method="get" th:action="@{/admin/category}">
-					<div class="input-group">
-						<input type="text" name="keywordName" th:value="${keywordName}"
-							placeholder="カテゴリ名">
-						<button type="submit">検索</button>
-					</div>
-				</form>
+				<div class="d-flex justify-content-between">
+					<form method="get" th:action="@{/admin/category}">
+						<div class="input-group">
+							<input type="text" name="keywordName" th:value="${keywordName}"
+								placeholder="カテゴリ名">
+							<button type="submit">検索</button>
+						</div>
+					</form>
+					<a th:href="@{/admin/category/input}" class="btn">登録</a>
+				</div>
 			</div>
 			<table class="table">
 				<thead>
@@ -48,23 +51,32 @@
 						<td th:text="${category.getName()}"></td>
 						<td th:if="${category.getEnable() == true}">有効</td>
 						<td th:if="${category.getEnable() == false}">無効</td>
-						<td><a th:href="@{/admin/category/edit/__${category.getId()}__}">編集</a></td>
-						<td><a th:if="${category.getEnable() == true}" href="#" data-bs-toggle="modal" th:data-bs-target="${'#delete' + category.getId()}">無効にする</a></td>
-						
+						<td><a
+							th:href="@{/admin/category/edit/__${category.getId()}__}">編集</a></td>
+						<td><a th:if="${category.getEnable() == true}" href="#"
+							data-bs-toggle="modal"
+							th:data-bs-target="${'#delete' + category.getId()}">無効にする</a></td>
+
 						<!-- 削除モーダル -->
-						<div class="modal fade" th:id="${'delete' + category.getId()}" tabindex="-1" th:aria-labelledby="${'#deleteLabel' + category.getId()}">
+						<div class="modal fade" th:id="${'delete' + category.getId()}"
+							tabindex="-1"
+							th:aria-labelledby="${'#deleteLabel' + category.getId()}">
 							<div class="modal-dialog">
 								<div class="modal-content">
 									<div class="modal-header">
-										<h5 class="modal-title" th:id="${'deleteLabel' + category.getId()}" th:text="${category.getName() + 'を無効にしますか'}"></h5>	
-										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-labe="閉じる"></button>
-									</div>	
+										<h5 class="modal-title"
+											th:id="${'deleteLabel' + category.getId()}"
+											th:text="${category.getName() + 'を無効にしますか'}"></h5>
+										<button type="button" class="btn-close"
+											data-bs-dismiss="modal" aria-labe="閉じる"></button>
+									</div>
 									<div class="modal-footer">
-										<form method="post" th:action="@{/admin/category/delete/__${category.getId()}__}">
-											<button type="submit" class="btn">無効にする</button>	
+										<form method="post"
+											th:action="@{/admin/category/delete/__${category.getId()}__}">
+											<button type="submit" class="btn">無効にする</button>
 										</form>
 									</div>
-								</div>	
+								</div>
 							</div>
 						</div>
 					</tr>
@@ -81,8 +93,8 @@
 						class="page-link">前</a></li>
 					<li
 						th:each="i : ${#numbers.sequence(0, pageCategory.getTotalPages()-1)}"
-						class="page-item"><a
-						th:if="${i == pageCategory.getNumber()}" th:text="${i+1}"
+						class="page-item"><a th:if="${i == pageCategory.getNumber()}"
+						th:text="${i+1}"
 						th:href="@{/admin/category(page = ${i}, keywordName = ${keywordName})}"
 						class="page-link disabled"></a> <a
 						th:unless="${i == pageCategory.getNumber()}" th:text="${i+1}"

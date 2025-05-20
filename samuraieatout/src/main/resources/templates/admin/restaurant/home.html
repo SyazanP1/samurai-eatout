@@ -24,35 +24,18 @@
 			</div>
 			<!-- 検索フォーム -->
 			<div class="row">
-				<form method="get" th:action="@{/admin/restaurant}">
-					<div class="input-group">
-						<input type="text" name="keywordName" th:value="${keywordName}"
-							placeholder="店舗名">
-						<!--						<select name="keyidCategory" class="form-select">-->
-						<!--							<option value="" th:selected="!${keyidCategory}">カテゴリ</option>-->
-						<!--							<option th:each="category : ${listCategories}" th:value="${category.getId()}"-->
-						<!--								th:text="${category.getName()}" th:selected="${category.getId()}==${keyidCategory}">-->
-						<!--							</option>-->
-						<!--						</select>-->
-						<button type="submit">検索</button>
-					</div>
-				</form>
+				<div
+					class="d-flex justify-content-between align-items-end flex-wrap">
+					<form method="get" th:action="@{/admin/restaurant}">
+						<div class="input-group">
+							<input type="text" name="keywordName" th:value="${keywordName}"
+								placeholder="店舗名">
+							<button type="submit">検索</button>
+						</div>
+					</form>
+					<a th:href="@{/admin/restaurant/input}" class="btn">登録</a>
+				</div>
 			</div>
-			<!-- 店舗表示 -->
-			<!--			<div th:each="restaurant : ${pageRestaurant}">-->
-			<!--				<a th:href="@{/restaurant/details/__${restaurant.getId()}__}" class="link-dark">-->
-			<!--					<div class="row h-25">-->
-			<!--						<div class="col-md-4">-->
-			<!--							<img class="mw-100 mh-100" th:src="@{/images/__${restaurant.getImageName()}__}" alt="店舗画像">-->
-			<!--						</div>-->
-			<!--						<div class="d-flex flex-column col-md-8">-->
-			<!--							<span>・店舗名</span><span th:text="${restaurant.getName()}"></span>-->
-			<!--							<span>・住所</span><span th:text="${restaurant.getAddress()}"></span>-->
-			<!--							<span>・特色</span><span th:text="${restaurant.getFetures}"></span>-->
-			<!--						</div>-->
-			<!--					</div>-->
-			<!--				</a>-->
-			<!--			</div>-->
 			<table class="table">
 				<thead>
 					<tr>
@@ -72,23 +55,31 @@
 						<td th:text="${restaurant.getName()}"></td>
 						<td th:text="${restaurant.getAddress()}"></td>
 						<td th:text="${restaurant.getFetures()}"></td>
-						<td><a th:href="@{/admin/restaurant/edit/__${restaurant.getId()}__}">編集</a></td>
-						<td><a href="#" data-bs-toggle="modal" th:data-bs-target="${'#delete' + restaurant.getId()}">削除</a></td>
-						
+						<td><a
+							th:href="@{/admin/restaurant/edit/__${restaurant.getId()}__}">編集</a></td>
+						<td><a href="#" data-bs-toggle="modal"
+							th:data-bs-target="${'#delete' + restaurant.getId()}">削除</a></td>
+
 						<!-- 削除モーダル -->
-						<div class="modal fade" th:id="${'delete' + restaurant.getId()}" tabindex="-1" th:aria-labelledby="${'#deleteLabel' + restaurant.getId()}">
+						<div class="modal fade" th:id="${'delete' + restaurant.getId()}"
+							tabindex="-1"
+							th:aria-labelledby="${'#deleteLabel' + restaurant.getId()}">
 							<div class="modal-dialog">
 								<div class="modal-content">
 									<div class="modal-header">
-										<h5 class="modal-title" th:id="${'deleteLabel' + restaurant.getId()}" th:text="${restaurant.getName() + 'を削除しますか'}"></h5>	
-										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-labe="閉じる"></button>
-									</div>	
+										<h5 class="modal-title"
+											th:id="${'deleteLabel' + restaurant.getId()}"
+											th:text="${restaurant.getName() + 'を削除しますか'}"></h5>
+										<button type="button" class="btn-close"
+											data-bs-dismiss="modal" aria-labe="閉じる"></button>
+									</div>
 									<div class="modal-footer">
-										<form method="post" th:action="@{/admin/restaurant/delete/__${restaurant.getId()}__}">
-											<button type="submit" class="btn">削除</button>	
+										<form method="post"
+											th:action="@{/admin/restaurant/delete/__${restaurant.getId()}__}">
+											<button type="submit" class="btn">削除</button>
 										</form>
 									</div>
-								</div>	
+								</div>
 							</div>
 						</div>
 					</tr>

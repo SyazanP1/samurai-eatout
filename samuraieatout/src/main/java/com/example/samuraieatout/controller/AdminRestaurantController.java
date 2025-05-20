@@ -27,7 +27,7 @@ import com.example.samuraieatout.service.CategoryService;
 import jakarta.validation.Valid;
 
 @Controller
-@RequestMapping("/admin")
+@RequestMapping("/admin/restaurant")
 public class AdminRestaurantController {
 	private AdminRestaurantService adminRestaurantService;
 	private CategoryService categoryService;
@@ -37,7 +37,7 @@ public class AdminRestaurantController {
 		this.categoryService = categoryService;
 	}
 
-	@GetMapping("/restaurant")
+	@GetMapping
 	public String showRestaurants(@RequestParam(name = "keywordName", required = false) String keywordName,
 			@PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.ASC) Pageable pageable,
 			Model model) {
@@ -50,7 +50,7 @@ public class AdminRestaurantController {
 		return "admin/restaurant/home";
 	}
 
-	@GetMapping("/restaurant/input")
+	@GetMapping("/input")
 	public String inputRestaurant(Model model) {
 		RestaurantRegistForm restaurantRegistForm = new RestaurantRegistForm();
 		List<Category> listCategory = categoryService.obtainCategory();
@@ -60,7 +60,7 @@ public class AdminRestaurantController {
 		return "admin/restaurant/regist";
 	}
 
-	@PostMapping("/restaurant/regist")
+	@PostMapping("/regist")
 	public String registRestaurant(@ModelAttribute @Valid RestaurantRegistForm restaurantRegistForm,
 			BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
 		if (bindingResult.hasErrors()) {
@@ -75,7 +75,7 @@ public class AdminRestaurantController {
 		return "redirect:/admin/restaurant";
 	}
 	
-	@GetMapping("/restaurant/edit/{restaurantId}")
+	@GetMapping("/edit/{restaurantId}")
 	public String editRestaurant(@PathVariable(name = "restaurantId") Integer restaurantId,
 			Model model) {
 		Restaurant restaurant = adminRestaurantService.obtainRestaurant(restaurantId);
@@ -91,7 +91,7 @@ public class AdminRestaurantController {
 		
 	}
 	
-	@PostMapping("/restaurant/update")
+	@PostMapping("/update")
 	public String updateRestaurant(@ModelAttribute @Valid RestaurantEditForm restaurantEditForm,
 			BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
 		
@@ -107,7 +107,7 @@ public class AdminRestaurantController {
 		return "redirect:/admin/restaurant";
 	}
 	
-	@PostMapping("/restaurant/delete/{restaurantId}")
+	@PostMapping("/delete/{restaurantId}")
 	public String deleteRestaurant(@PathVariable(name = "restaurantId") Integer restaurantId, RedirectAttributes redirectAttributes) {
 		adminRestaurantService.deleteRestaurant(restaurantId);
 		redirectAttributes.addFlashAttribute("deleteMessage", "店舗を削除しました。");

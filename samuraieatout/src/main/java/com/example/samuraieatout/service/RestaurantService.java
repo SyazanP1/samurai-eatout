@@ -1,5 +1,7 @@
 package com.example.samuraieatout.service;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -63,21 +65,11 @@ public class RestaurantService {
 		return category;
 	}
 
-	//　カテゴリ検索条件　前回条件を表示するため
-	//	public String searcedCategoryName(Integer categoryId) {
-	//
-	//		String keywordCategory = null;
-	//
-	//		if (categoryId == null) {
-	//			// 対応するカテゴリは存在しないので処理を終了し戻り値はnullとなる
-	//
-	//		} else {
-	//
-	//			Category category = categoryRepository.getReferenceById(categoryId);
-	//			keywordCategory = category.getName();
-	//
-	//		}
-	//		return keywordCategory;
-	//	}
+	
+	//	トップページhomeに表示する店舗を取得
+	public List<Restaurant> obtainList10Restaurant(){
+		List<Restaurant> listRestaurant = restaurantRepository.findTop10ByOrderByIdDesc();
+		return listRestaurant;
+	}
 
 }
