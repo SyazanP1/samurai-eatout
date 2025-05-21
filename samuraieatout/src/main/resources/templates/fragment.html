@@ -34,7 +34,9 @@
 		<div class="navbar navbar-expand-md">
 			<div class="container">
 				<!-- タイトルロゴ -->
-				<a th:href="@{/home}" class="navbar-brand"> SAMURAI EATOUT </a>
+<!--				<a th:href="@{/home}" class="navbar-brand"> SAMURAI EATOUT </a>-->
+				<a th:href="@{/}" class="navbar-brand"> SAMURAI EATOUT </a>
+
 				<!-- ヘッダー右側 -->
 				<!-- ナビゲーションメニュー -->
 				<div class="justify-content-end">
@@ -48,44 +50,21 @@
 						<li sec:authorize="isAnonymous()" class="nav-item px-2"><a
 							class="nav-link" th:href="@{/member/resetPassword}">パスワードの再設定</a></li>
 
-						<!-- ドロップダウン（済ログイン時） -->
-<!--						<li sec:authorize="isAuthenticated()" class="nav-item dropdown">-->
-<!--							<a class="btn dropdown-toggle" role="button"-->
-<!--							data-bs-toggle="dropdown" aria-expanded="false">-->
-<!--								<span sec:authentication="principal.member.name"></span>-->
-<!--						</a>-->
-<!--							<div class="dropdown-menu">-->
-<!--								<a class="dropdown-item"-->
-<!--									onclick="event.preventDefault(); document.getElementById('logout-form').submit();">ログアウト</a>-->
-<!--								<form id="logout-form" th:action="@{/logout}" method="post"></form>-->
-<!--								 有料会員登録 -->
-<!--								<a class="dropdown-item" th:href="@{/paidMember}">有料会員登録</a>-->
-
-<!--								 支払い情報編集 -->
-<!--								<a class="dropdown-item" th:href="@{/editMember}">会員情報の編集</a>-->
-
-<!--								 パスワードの再設定 -->
-<!--								<a class="dropdown-item" th:href="@{/member/resetPassword}">パスワードの再設定</a>-->
-<!--							</div>-->
-<!--						</li>-->
-						
 						<!-- 無料会員ログイン時 -->
 						<li sec:authorize="hasAuthority('FREE')" class="nav-item dropdown">
 							<a class="btn dropdown-toggle" role="button"
 							data-bs-toggle="dropdown" aria-expanded="false">
 								<span sec:authentication="principal.member.name"></span>
+								<span>(会員区分：無料)</span>
 						</a>
 							<div class="dropdown-menu">
 								<a class="dropdown-item"
 									onclick="event.preventDefault(); document.getElementById('logout-form').submit();">ログアウト</a>
 								<form id="logout-form" th:action="@{/logout}" method="post"></form>
-								<!-- 有料会員登録 -->
-								<a class="dropdown-item" th:href="@{/paidMember}">有料会員登録</a>
 								<!-- 会員情報編集 -->
-								<a class="dropdown-item" th:href="@{/editMember}">会員情報の編集</a>
-
-								<!-- テスト用 -->
-								<a class="dropdown-item" th:href="@{/logout}">テストログアウト</a>
+								<a class="dropdown-item" th:href="@{/confirmMember}">会員情報</a>
+								<!-- 有料会員登録 -->
+								<a class="dropdown-item" th:href="@{/paidMember}">有料会員へのアップグレード</a>
 							</div>
 						</li>
 
@@ -94,20 +73,18 @@
 							<a class="btn dropdown-toggle" role="button"
 							data-bs-toggle="dropdown" aria-expanded="false">
 								<span sec:authentication="principal.member.name"></span>
+								<span>(会員区分：有料)</span>
 						</a>
 							<div class="dropdown-menu">
 								<a class="dropdown-item"
 									onclick="event.preventDefault(); document.getElementById('logout-form').submit();">ログアウト</a>
 								<form id="logout-form" th:action="@{/logout}" method="post"></form>
 								<!-- 会員情報編集 -->
-								<a class="dropdown-item" th:href="@{/editMember}">会員情報の編集</a>
+								<a class="dropdown-item" th:href="@{/confirmMember}">会員情報</a>
 								<!-- 予約一覧 -->
 								<a class="dropdown-item" th:href="@{/reservation/list}">予約一覧</a>
 								<!-- お気に入り一覧 -->
 								<a class="dropdown-item" th:href="@{/favorite/list}">お気に入り一覧</a>
-
-								<!-- テスト用 -->
-								<a class="dropdown-item" th:href="@{/logout}">テストログアウト</a>
 							</div>
 						</li>
 

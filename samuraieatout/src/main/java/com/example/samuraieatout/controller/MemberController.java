@@ -16,6 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.samuraieatout.entity.Member;
 import com.example.samuraieatout.form.ChangeEmailForm;
+import com.example.samuraieatout.form.ConfirmMemberForm;
 import com.example.samuraieatout.form.EditMemberForm;
 import com.example.samuraieatout.form.ResetPasswordForm;
 import com.example.samuraieatout.form.ResetPasswordSendEmailForm;
@@ -113,20 +114,34 @@ public class MemberController {
 		return ResponseEntity.ok().build();
 	}
 
-	//	会員基本情報編集画面
-	@GetMapping("/editMember")
-	public String showEditPaid(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
+	//	会員基本情確認画面
+	@GetMapping("/confirmMember")
+	public String confirmMember(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
 			HttpServletRequest httpServletRequest, Model model) throws StripeException {
 		//	Stripeの決済情報編集用ポータルサイトリンクを作成
 		Member member = userDetailsImpl.getMember();
-		EditMemberForm editMemberForm = new EditMemberForm(member.getId(), member.getName());
-		model.addAttribute("editMemberForm", editMemberForm);
+//		EditMemberForm editMemberForm = new EditMemberForm(member.getId(), member.getName());
+//		model.addAttribute("editMemberForm", editMemberForm);
+		ConfirmMemberForm confirmMemberForm = new ConfirmMemberForm(member.getId(), member.getName(), member.getEmail());
+		model.addAttribute("confirmMemberForm", confirmMemberForm);
 
 		//	有料会員の場合
 		if (memberService.isAuthorityPaid(member)) {
 			String stripeUrl = stripeService.createEditPaidUrl(member, httpServletRequest);
 			model.addAttribute("stripeUrl", stripeUrl);
 		}
+
+		return "member/confirmMember";
+	}
+	
+
+	//	会員情報の編集
+	@GetMapping("/editMember")
+	public String editMember(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
+			HttpServletRequest httpServletRequest, Model model) throws StripeException {
+		Member member = userDetailsImpl.getMember();
+		EditMemberForm editMemberForm = new EditMemberForm(member.getId(), member.getName());
+		model.addAttribute("editMemberForm", editMemberForm);
 
 		return "member/editMember";
 	}
@@ -140,16 +155,16 @@ public class MemberController {
 			@AuthenticationPrincipal UserDetailsImpl userDetailsImpl) throws StripeException {
 
 		//	メールアドレス重複、パスワード不一致の場合エラーを追加
-		bindingResult = memberService.addErrorBindingResult(bindingResult, null, editMemberForm.getPassword(),
-				editMemberForm.getPasswordConfirm());
+//		bindingResult = memberService.addErrorBindingResult(bindingResult, null, editMemberForm.getPassword(),
+//				editMemberForm.getPasswordConfirm());
 
 		//	バリデーションエラーがあればフォームを再表示
 		if (bindingResult.hasErrors()) {
 			//	有料会員の場合
-			if (memberService.isAuthorityPaid(userDetailsImpl.getMember())) {
-				String stripeUrl = stripeService.createEditPaidUrl(userDetailsImpl.getMember(), httpServletRequest);
-				model.addAttribute("stripeUrl", stripeUrl);
-			}
+//			if (memberService.isAuthorityPaid(userDetailsImpl.getMember())) {
+//				String stripeUrl = stripeService.createEditPaidUrl(userDetailsImpl.getMember(), httpServletRequest);
+//				model.addAttribute("stripeUrl", stripeUrl);
+//			}
 			return "member/editMember";
 		}
 
@@ -159,7 +174,7 @@ public class MemberController {
 		//	SecurityContextを更新
 		authService.updateSecurityContext(member);
 
-		return "redirect:/login";
+		return "redirect:/confirmMember";
 
 	}
 

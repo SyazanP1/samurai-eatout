@@ -7,6 +7,11 @@
 <body>
 	<div th:replace="~{fragment :: header}"></div>
 	<main>
+		<!-- ログインメッセージ -->
+		<div class="container">
+			<div th:if="${param.loggedIn}" class="alert alert-info">
+				ログインしました。</div>
+		</div>
 		<div class="container">
 			<!-- 検索フォーム -->
 			<div class="row">

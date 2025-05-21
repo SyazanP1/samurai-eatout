@@ -16,6 +16,7 @@ import com.example.samuraieatout.service.HomeService;
 import com.example.samuraieatout.service.RestaurantService;
 
 @Controller
+//@RequestMapping("/")
 public class HomeController {
 	private final RestaurantService restaurantService;
 	private final CategoryService categoryService;
@@ -27,7 +28,8 @@ public class HomeController {
 		this.homeService = homeService;
 	}
 	
-	@GetMapping("/home")
+//	@GetMapping("/home")
+	@GetMapping("/")
 	public String showHome(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl, Model model, RedirectAttributes redirectAttributes) {
 		
 		if (homeService.isAuthorityADMIN(userDetailsImpl)) {

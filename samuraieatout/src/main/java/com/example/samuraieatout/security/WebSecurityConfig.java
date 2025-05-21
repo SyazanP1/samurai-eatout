@@ -20,28 +20,33 @@ public class WebSecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
 				.authorizeHttpRequests((requests) -> requests
-//						参考サイト https://zenn.dev/peishim/articles/c225ac5a5eedb0
-//						.requestMatchers("/css/**", "/login", "/signup/**", "/stripe/webhook", "/member/resetPassword/**", "/member/resetPassword/inputPassword/verify/**", "/home").permitAll()
-						.requestMatchers("/home", "/login", "/restaurant/**", "/signup/**", "/member/resetPassword/**", "/stripe/webhook").permitAll()
+						//						参考サイト https://zenn.dev/peishim/articles/c225ac5a5eedb0
+						//						.requestMatchers("/css/**", "/login", "/signup/**", "/stripe/webhook", "/member/resetPassword/**", "/member/resetPassword/inputPassword/verify/**", "/home").permitAll()
+						.requestMatchers("/", "/login", "/restaurant/**", "/signup/**", "/member/resetPassword/**",
+								"/stripe/webhook")
+						.permitAll()
 						//	静的リソースは誰でも閲覧可能とする
 						.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-//						.requestMatchers("/admin/restaurant/**", "/admin/member/**", "/admin/category/**").hasRole("ADMIN")
+						//						.requestMatchers("/admin/restaurant/**", "/admin/member/**", "/admin/category/**").hasRole("ADMIN")
 						.requestMatchers("/admin/**").hasAuthority("ADMIN")
-//						.requestMatchers("/paidMember").hasAuthority("FREE")
+						//						.requestMatchers("/paidMember").hasAuthority("FREE")
 						.anyRequest().authenticated())
 				.formLogin((form) -> form
 						.loginPage("/login")
 						.loginProcessingUrl("/login")
-						.defaultSuccessUrl("/home")
+//						Spring Securityの挙動に関して、デフォルトの挙動として、ユーザーが未ログインでアクセスしようとしていた保護されたURLに対して、ログインが成功した後にその元々アクセスしようとしていたページにリダイレクトされる動作を持っています。この動作は「元々のリクエストに戻す」という仕様として意図されています。
+//						Spring Securityの formLogin()設定で alwaysUseDefaultTargetUrl(true)を使用します。この設定を有効にすると、ユーザーがログインするたびに defaultSuccessUrlに指定されたURLへリダイレクトされます。
+//						.defaultSuccessUrl("/?loggedIn")
+						.defaultSuccessUrl("/?loggedIn", true)
 						.failureUrl("/login?error")
 						.permitAll())
 				.logout((logout) -> logout
 						//	Getメソッドでログアウトできるようにする
 						.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-//						.logoutSuccessUrl("/?loggedOut")	//	"/"へのアクセスに対して応答するコントローラーがを定義していないのでwhitepageエラーが発生。以下のように修正。
-						.logoutSuccessUrl("/login?loggedOut")
+						.logoutSuccessUrl("/?loggedOut")
 						.permitAll())
-				.csrf().ignoringRequestMatchers("/stripe/webhook");
+				//				.csrf().ignoringRequestMatchers("/stripe/webhook");
+				.csrf(csrf -> csrf.ignoringRequestMatchers("/stripe/webhook"));
 
 		return http.build();
 

@@ -26,55 +26,11 @@
 								</div>
 							</div>
 						</div>
-<!--						<div class="row mb-3">-->
-<!--							<div class="d-flex">-->
-<!--								<label class="col-form-label col-3">メールアドレス</label>-->
-<!--								<div class="col-8">-->
-<!--									<div th:if="${#fields.hasErrors('email')}" th:errors="*{email}"-->
-<!--										class="text-danger small"></div>-->
-<!--									<input type="text" class="form-control" th:field="*{email}">-->
-<!--								</div>-->
-<!--							</div>-->
-<!--						</div>-->
-						<div class="row mb-3">
-							<div class="d-flex">
-								<label class="col-form-label col-3">パスワード</label>
-								<div class="col-8">
-									<div th:if="${#fields.hasErrors('password')}"
-										th:errors="*{password}" class="text-danger small"></div>
-									<input type="text" class="form-control" th:field="*{password}">
-								</div>
-							</div>
-						</div>
-						<div class="row mb-3">
-							<div class="d-flex">
-								<label class="col-form-label col-3">パスワード（確認用）</label>
-								<div class="col-8">
-									<div th:if="${#fields.hasErrors('passwordConfirm')}"
-										th:errors="*{passwordConfirm}" class="text-danger small"></div>
-									<input type="text" class="form-control"
-										th:field="*{passwordConfirm}">
-								</div>
-							</div>
-						</div>
 						<div class="row mb-3">
 							<button type="submit" class="btn">更新</button>
 						</div>
 					</form>
 				</div>
-			</div>
-
-			<div th:if="${stripeUrl}" class="row justify-content-center">
-				<h3>支払い情報編集画面</h3>
-				<a th:href="@{__${stripeUrl}__}">支払い編集画面へ</a>
-			</div>
-			<div class="row justify-content-center">
-				<h3>メールアドレス変更</h3>
-				<a th:href="@{/member/changeEmail}">メールアドレス変更画面へ</a>
-			</div>
-			<div class="row justify-content-center">
-				<h3>パスワードリセット</h3>
-				<a th:href="@{/member/resetPassword}">パスワードリセット画面へ</a>
 			</div>
 		</div>
 	</main>

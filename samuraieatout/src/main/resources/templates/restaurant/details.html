@@ -14,7 +14,6 @@
 				<span th:text="${successMessage}"></span>
 			</div>
 			<!-- お気に入り登録 -->
-			<!--			<a href="#">お気に入り登録</a>-->
 			<div sec:authorize="hasAuthority('PAID')">
 				<div th:if="${isFavorite}">
 					<a href="#"
@@ -106,8 +105,11 @@
 				</div>
 			</div>
 			<!-- レビュー書込みリンク-->
-			<div class="row">
-				<a th:href="@{/review/input/__${restaurant.getId()}__}">レビューを書き込む</a>
+<!--			<div sec:authorize="isAuthenticated()">-->
+			<div th:unless="${myReview}">
+				<div class="row">
+					<a th:href="@{/review/input/__${restaurant.getId()}__}">レビューを書き込む</a>
+				</div>
 			</div>
 			<!-- ログイン者のレビュー-->
 			<div th:if="${myReview}">
@@ -153,7 +155,10 @@
 			<div class="row">
 				<h5>みんなのレビュー</h5>
 			</div>
-			<div class="row row-cols-md-2">
+			<div th:if="${listReview.size() == 0}" class="row row-cols-md-2">
+					<span>まだレビューがありません。</span>
+			</div>
+			<div th:unless="${listReview.size() == 0}" class="row row-cols-md-2">
 				<div th:each="review : ${listReview}" class="card">
 					<div class="card-body">
 						<h5 th:text="${review.getMember().getName()}"></h5>
@@ -163,10 +168,12 @@
 				</div>
 			</div>
 			<!-- レビュー一覧画面へのボタン -->
-			<div class="row">
-				<div class="d-flex justify-content-center my-3">
-					<a class="btn btn-outline-info btn-sm"
-						th:href="@{/review/list/__${restaurant.getId()}__}">レビュー一覧</a>
+			<div th:unless="${listReview.size() == 0}" sec:authorize="isAuthenticated()">
+				<div class="row">
+					<div class="d-flex justify-content-center my-3">
+						<a class="btn btn-outline-info btn-sm"
+							th:href="@{/review/list/__${restaurant.getId()}__}">レビュー一覧</a>
+					</div>
 				</div>
 			</div>
 		</div>

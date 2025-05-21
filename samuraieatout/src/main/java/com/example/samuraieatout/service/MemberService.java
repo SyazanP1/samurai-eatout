@@ -115,7 +115,7 @@ public class MemberService {
 	@Transactional
 	public void updateMember(Member member, EditMemberForm editMemberForm) {
 		member.setName(editMemberForm.getName());
-		member.setPassword(passwordEncoder.encode(editMemberForm.getPassword()));
+//		member.setPassword(passwordEncoder.encode(editMemberForm.getPassword()));
 		
 		//	メールアドレスの変更はメール認証の過程を含めるか要件等
 //		member.setEmail(editMemberForm.getEmail());
