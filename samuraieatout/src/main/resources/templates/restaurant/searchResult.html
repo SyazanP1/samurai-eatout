@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <div th:replace="~{fragment :: meta}"></div>
 
 <div th:replace="~{fragment :: link}"></div>
@@ -8,62 +9,77 @@
 
 	<div th:replace="~{fragment :: header}"></div>
 	<main>
+		<!-- 検索フォーム -->
+		<div th:replace="~{fragment :: searchForm}"></div>
+
 		<div class="container">
-			<!-- 検索フォーム -->
 			<div class="row">
-				<form method="get" th:action="@{/restaurant/search}">
-					<div class="input-group">
-						<input type="text" name="keywordName" th:value="${keywordName}" placeholder="店舗名">
-						<select name="keyidCategory" class="form-select">
-							<option value="" th:selected="!${keyidCategory}">カテゴリ</option>
-							<option th:each="category : ${listCategories}" th:value="${category.getId()}"
-								th:text="${category.getName()}" th:selected="${category.getId()}==${keyidCategory}">
-							</option>
-						</select>
-						<button type="submit">
-							検索
-						</button>
-					</div>
-				</form>
-			</div>
-			<!-- 店舗表示 -->
-			<div th:each="restaurant : ${pageRestaurant}">
-				<a th:href="@{/restaurant/details/__${restaurant.getId()}__}" class="link-dark">
-					<div class="row h-25">
-						<div class="col-md-4">
-							<img class="mw-100 mh-100" th:src="@{/images/__${restaurant.getImageName()}__}" alt="店舗画像">
+				<!-- 店舗表示 -->
+				<div th:each="restaurant : ${pageRestaurant}">
+					<a th:href="@{/restaurant/details/__${restaurant.getId()}__}"
+						class="link-dark">
+						<div class="card h-100 d-flex" id="samurai-card">
+							<div class="row g-0 h-100">	<!-- rowはデフォルトで-15px相当のgutterがつくため。h-100によりカードと画像の余白を解消。 -->
+								<div class="col-4">
+									<img th:src="@{/images/__${restaurant.getImageName()}__}"
+										class="card-img-top" id="samurai-card-image" alt="店舗画像">
+								</div>
+								<div class="col-8">
+									<div class="card-body">
+										<div class="card-title">
+											<span th:text="${restaurant.getName()}"></span>
+										</div>
+										<div class="card-text">
+											<span th:text="${restaurant.getAddress()}"></span> <span
+												th:text="${restaurant.getFetures}"></span>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
-						<div class="d-flex flex-column col-md-8">
-							<span>・店舗名</span><span th:text="${restaurant.getName()}"></span>
-							<span>・住所</span><span th:text="${restaurant.getAddress()}"></span>
-							<span>・特色</span><span th:text="${restaurant.getFetures}"></span>
-						</div>
-					</div>
-				</a>
+					</a>
+				</div>
 			</div>
+
+			<!--			<div th:each="restaurant : ${pageRestaurant}">-->
+			<!--				<a th:href="@{/restaurant/details/__${restaurant.getId()}__}"-->
+			<!--					class="link-dark">-->
+			<!--					<div class="row h-25">-->
+			<!--						<div class="col-md-4">-->
+			<!--							<img class="mw-100 mh-100"-->
+			<!--								th:src="@{/images/__${restaurant.getImageName()}__}" alt="店舗画像">-->
+			<!--						</div>-->
+			<!--						<div class="d-flex flex-column col-md-8">-->
+			<!--							<span>・店舗名</span><span th:text="${restaurant.getName()}"></span>-->
+			<!--							<span>・住所</span><span th:text="${restaurant.getAddress()}"></span>-->
+			<!--							<span>・特色</span><span th:text="${restaurant.getFetures}"></span>-->
+			<!--						</div>-->
+			<!--					</div>-->
+			<!--				</a>-->
+			<!--			</div>-->
 			<!-- ページネーション -->
-			<div th:if="${pageRestaurant.getTotalPages() > 1}" class="d-flex justify-content-center">
+			<div th:if="${pageRestaurant.getTotalPages() > 1}"
+				class="d-flex justify-content-center">
 				<ul class="pagination">
-					<li class="page-item">
-						<a th:if="${pageRestaurant.isFirst()}" class="page-link disabled">前</a>
-						<a th:unless="${pageRestaurant.isFirst()}"
-							th:href="@{/restaurant/search(page = ${pageRestaurant.getNumber()-1}, keywordName = ${keywordName}, keyidCategory = ${keyidCategory})}"
-							class="page-link">前</a>
-					</li>
-					<li th:each="i : ${#numbers.sequence(0, pageRestaurant.getTotalPages()-1)}" class="page-item">
-						<a th:if="${i == pageRestaurant.getNumber()}" th:text="${i+1}"
-							th:href="@{/restaurant/search(page = ${i}, keywordName = ${keywordName}, keyidCategory = ${keyidCategory})}"
-							class="page-link disabled"></a>
-						<a th:unless="${i == pageRestaurant.getNumber()}" th:text="${i+1}"
-							th:href="@{/restaurant/search(page = ${i}, keywordName = ${keywordName}, keyidCategory = ${keyidCategory})}"
-							class="page-link"></a>
-					</li>
-					<li class="page-item">
-						<a th:if="${pageRestaurant.isLast()}" class="page-link disabled">次</a>
-						<a th:unless="${pageRestaurant.isLast()}"
-							th:href="@{/restaurant/search(page = ${pageRestaurant.getNumber()+1}, keywordName = ${keywordName}, keyidCategory = ${keyidCategory})}"
-							class="page-link">次</a>
-					</li>
+					<li class="page-item"><a th:if="${pageRestaurant.isFirst()}"
+						class="page-link disabled">前</a> <a
+						th:unless="${pageRestaurant.isFirst()}"
+						th:href="@{/restaurant/search(page = ${pageRestaurant.getNumber()-1}, keywordName = ${keywordName}, keyidCategory = ${keyidCategory})}"
+						class="page-link">前</a></li>
+					<li
+						th:each="i : ${#numbers.sequence(0, pageRestaurant.getTotalPages()-1)}"
+						class="page-item"><a
+						th:if="${i == pageRestaurant.getNumber()}" th:text="${i+1}"
+						th:href="@{/restaurant/search(page = ${i}, keywordName = ${keywordName}, keyidCategory = ${keyidCategory})}"
+						class="page-link disabled"></a> <a
+						th:unless="${i == pageRestaurant.getNumber()}" th:text="${i+1}"
+						th:href="@{/restaurant/search(page = ${i}, keywordName = ${keywordName}, keyidCategory = ${keyidCategory})}"
+						class="page-link"></a></li>
+					<li class="page-item"><a th:if="${pageRestaurant.isLast()}"
+						class="page-link disabled">次</a> <a
+						th:unless="${pageRestaurant.isLast()}"
+						th:href="@{/restaurant/search(page = ${pageRestaurant.getNumber()+1}, keywordName = ${keywordName}, keyidCategory = ${keyidCategory})}"
+						class="page-link">次</a></li>
 				</ul>
 			</div>
 		</div>

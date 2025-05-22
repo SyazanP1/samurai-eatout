@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <div th:replace="~{fragment :: meta}"></div>
 
 <div th:replace="~{fragment :: link}"></div>
+
 
 <body>
 	<div th:replace="~{fragment :: header}"></div>
@@ -12,32 +14,39 @@
 			<div th:if="${param.loggedIn}" class="alert alert-info">
 				ログインしました。</div>
 		</div>
-		<div class="container">
-			<!-- 検索フォーム -->
-			<div class="row">
+		<!-- ビッグイメージ -->
+		<div class="container-fluid img-hidden p-0" id="samurai-big-image">
+			<img src="images/image3.jpg" class="img-fluid">
+		</div>
+		<!-- 検索フォーム -->
+		<div class="bg-light mb-4">
+			<div class="container">
+				<h5 class="my-2">店舗名やカテゴリから探す</h5>
 				<form method="get" th:action="@{/restaurant/search}">
 					<div class="input-group">
-						<input type="text" name="keywordName" placeholder="店舗名">
-						<select name="keyidCategory" class="form-select">
+						<input type="text" name="keywordName" placeholder="店舗名"> <select
+							name="keyidCategory" class="form-select">
 							<option selected value="">
 								<p>カテゴリ</p>
 							</option>
-							<option th:each="category : ${listCategories}" th:value="${category.getId()}"
-								th:text="${category.getName()}">
+							<option th:each="category : ${listCategories}"
+								th:value="${category.getId()}" th:text="${category.getName()}">
 							</option>
 						</select>
-						<button type="submit">
-							検索
-						</button>
+						<button type="submit">検索</button>
 					</div>
 				</form>
 			</div>
-			<!-- 店舗一覧 -->
+		</div>
+		<!-- 店舗一覧 -->
+		<div class="container">
 			<div class="row row-cols-lg-5 row-cols-2">
 				<div th:each="restaurant : ${listRestaurants}">
-					<a th:href="@{/restaurant/details/__${restaurant.getId()}__}" class="link-dark">
+					<a th:href="@{/restaurant/details/__${restaurant.getId()}__}"
+						class="link-dark">
 						<div class="card">
-							<img th:src="@{/images/__${restaurant.getImageName()}__}" alt="画像">
+							<img th:src="@{/images/__${restaurant.getImageName()}__}"
+								alt="画像">
 							<div class="card-body">
 								<h5 th:text="${restaurant.getName()}" class="card-title"></h5>
 								<p th:text="${restaurant.getFetures()}" class="card-text"></p>
