@@ -27,3 +27,8 @@
 #samurai-card-search-result{
 	min-height: 240px;
 }
+/* 店舗詳細画面 */
+#samurai-details-image{
+  max-height: 500px;
+  object-fit: cover;
+}

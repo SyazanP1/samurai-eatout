@@ -14,9 +14,9 @@
 				<span th:text="${successMessage}"></span>
 			</div>
 			<!-- お気に入り登録 -->
-			<div sec:authorize="hasAuthority('PAID')">
+			<div sec:authorize="hasAuthority('PAID')" class="my-3">
 				<div th:if="${isFavorite}">
-					<a href="#"
+					<a href="#" class="btn btn-outline-warning"
 						onclick="event.preventDefault(); document.getElementById('favorite-form').submit();">&#9829;
 						お気に入り解除</a>
 					<form method="post"
@@ -24,7 +24,7 @@
 						id="favorite-form" class="d-none"></form>
 				</div>
 				<div th:unless="${isFavorite}">
-					<a href="#"
+					<a href="#" class="btn btn-outline-warning"
 						onclick="event.preventDefault(); document.getElementById('favorite-form').submit();">&#9825;
 						お気に入り追加</a>
 					<form method="post"
@@ -35,13 +35,13 @@
 			<!-- 店舗詳細 -->
 			<!-- 画像 -->
 			<div class="row">
-				<!--      <img src="画像/image1.jpg" class="w-100">-->
 				<img th:src="@{/images/__${restaurant.getImageName()}__}"
-					class="w-100">
+					class="img-fluid" id="samurai-details-image">
 			</div>
-			<div class="row">
+			<div class="row align-items-center my-2">
 				<!-- 店舗説明 -->
-				<div class="container col-md-8">
+				<div class="container col-md-8 d-flex flex-column gap-3">
+					<!-- Bootstrap のユーティリティクラスで一定の余白を各要素間に設定 -->
 					<div class="row border-bottom">
 						<div class="col-4">
 							<span>民宿名</span>
@@ -81,7 +81,6 @@
 						<div class="card-body">
 							<form method="get"
 								th:action="@{/reservation/input/__${restaurant.getId()}__}"
-								}
 								th:object="${reservationInputForm}">
 								<div class="form-group">
 									<label>日付選択</label>
@@ -96,40 +95,50 @@
 										th:errors="*{number}"></div>
 									<input type="number" class="form-control" th:field="*{number}">
 								</div>
-								<div class="form-group">
-									<button type="submit">予約する</button>
+								<div class="form-group mt-4">
+									<button type="submit" class="btn btn-warning">予約する</button>
 								</div>
 							</form>
 						</div>
 					</div>
 				</div>
 			</div>
-			<!-- レビュー書込みリンク-->
-<!--			<div sec:authorize="isAuthenticated()">-->
-			<div th:unless="${myReview}">
-				<div class="row">
-					<a th:href="@{/review/input/__${restaurant.getId()}__}">レビューを書き込む</a>
-				</div>
-			</div>
 			<!-- ログイン者のレビュー-->
-			<div th:if="${myReview}">
+			<div th:if="${myReview}" class="mb-3">
 				<div class="row">
 					<h5>自身のレビュー</h5>
 				</div>
 				<div class="row row-cols-md-2">
-					<div th:if="${myReview}" class="card">
-						<div class="card-body">
-							<div class="d-flex justify-content-between">
+					<div th:if="${myReview}" class="col">
+						<div class="card">
+							<!--						<div class="card-body">-->
+							<!--							<div class="d-flex justify-content-between">-->
+							<!--								<div>-->
+							<!--									<h5 th:text="${myReview.getMember().getName()}"></h5>-->
+							<!--									<p th:text="${myReview.getScore()}"></p>-->
+							<!--									<p th:text="${myReview.getContent()}"></p>-->
+							<!--								</div>-->
+							<!--								<div>-->
+							<!--									<a th:href="@{/review/edit/__${myReview.getId()}__}">編集</a> <a-->
+							<!--										href="#" data-bs-toggle="modal" data-bs-target="#delete-modal">削除</a>-->
+							<!--								</div>-->
+							<!--							</div>-->
+							<!--						</div>-->
+							<div class="card-header d-flex justify-content-between">
 								<div>
-									<h5 th:text="${myReview.getMember().getName()}"></h5>
-									<p th:text="${myReview.getScore()}"></p>
-									<p th:text="${myReview.getContent()}"></p>
+									<span th:text="${myReview.getMember().getName()}"></span>
 								</div>
 								<div>
 									<a th:href="@{/review/edit/__${myReview.getId()}__}">編集</a> <a
 										href="#" data-bs-toggle="modal" data-bs-target="#delete-modal">削除</a>
 								</div>
 							</div>
+							<ul class="list-group list-group-flush">
+								<li class="list-group-item"><span>スコア：</span><span
+									th:text="${myReview.getScore()}"></span></li>
+								<li class="list-group-item"><span
+									th:text="${myReview.getContent()}"></span> </spna></li>
+							</ul>
 						</div>
 					</div>
 				</div>
@@ -155,25 +164,47 @@
 			<div class="row">
 				<h5>みんなのレビュー</h5>
 			</div>
-			<div th:if="${listReview.size() == 0}" class="row row-cols-md-2">
+			<div th:if="${listReview.size() == 0}" class="row my-2">
+				<div class="col d-flex justify-content-center">
 					<span>まだレビューがありません。</span>
+				</div>
 			</div>
-			<div th:unless="${listReview.size() == 0}" class="row row-cols-md-2">
-				<div th:each="review : ${listReview}" class="card">
-					<div class="card-body">
-						<h5 th:text="${review.getMember().getName()}"></h5>
-						<p th:text="${review.getScore()}"></p>
-						<p th:text="${review.getContent()}"></p>
+			<div th:unless="${listReview.size() == 0}"
+				class="row row-cols-md-2 g-4">
+				<div th:each="review : ${listReview}" class="col">
+					<div class="card">
+						<!--					<div class="card-body">-->
+						<!--						<h5 th:text="${review.getMember().getName()}"></h5>-->
+						<!--						<p th:text="${review.getScore()}"></p>-->
+						<!--						<p th:text="${review.getContent()}"></p>-->
+						<!--					</div>-->
+						<div class="card-header d-flex justify-content-between">
+							<div>
+								<span th:text="${review.getMember().getName()}"></span>
+							</div>
+						</div>
+						<ul class="list-group list-group-flush">
+							<li class="list-group-item"><span>スコア：</span><span
+								th:text="${review.getScore()}"></span></li>
+							<li class="list-group-item"><span
+								th:text="${review.getContent()}"></span> </spna></li>
+						</ul>
 					</div>
 				</div>
 			</div>
 			<!-- レビュー一覧画面へのボタン -->
-			<div th:unless="${listReview.size() == 0}" sec:authorize="isAuthenticated()">
-				<div class="row">
-					<div class="d-flex justify-content-center my-3">
-						<a class="btn btn-outline-info btn-sm"
-							th:href="@{/review/list/__${restaurant.getId()}__}">レビュー一覧</a>
-					</div>
+			<div class="row m-2">
+				<div th:unless="${listReview.size() == 0}"
+					sec:authorize="isAuthenticated()"
+					class="col d-flex justify-content-center">
+					<a class="btn btn-outline-dark btn-sm"
+						th:href="@{/review/list/__${restaurant.getId()}__}">レビュー一覧</a>
+				</div>
+				<!-- レビュー書込みリンク-->
+				<div th:unless="${myReview}"
+					class="col d-flex justify-content-center">
+					<a class="btn btn-outline-warning btn-sm"
+						th:href="@{/review/input/__${restaurant.getId()}__}">レビューを書き込む</a>
 				</div>
 			</div>
 		</div>
