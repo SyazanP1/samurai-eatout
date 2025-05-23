@@ -35,6 +35,7 @@ public class AdminCategoryController {
 			@RequestParam(name = "keywordName", required = false) String keywordName,
 			Model model) {
 		Page<Category> pageCategory = adminCategoryService.obtainSearchCategory(keywordName, pageable);
+		model.addAttribute("keywordName", keywordName);
 		model.addAttribute("pageCategory", pageCategory);
 		
 		return "admin/category/home";

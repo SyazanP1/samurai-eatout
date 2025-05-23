@@ -18,11 +18,11 @@
 				<div th:each="restaurant : ${pageRestaurant}">
 					<a th:href="@{/restaurant/details/__${restaurant.getId()}__}"
 						class="link-dark">
-						<div class="card h-100 d-flex" id="samurai-card">
+						<div class="card h-100 d-flex" id="samurai-card-search-result">
 							<div class="row g-0 h-100">	<!-- rowはデフォルトで-15px相当のgutterがつくため。h-100によりカードと画像の余白を解消。 -->
 								<div class="col-4">
 									<img th:src="@{/images/__${restaurant.getImageName()}__}"
-										class="card-img-top" id="samurai-card-image" alt="店舗画像">
+										class="card-img-top" id="samurai-card-image-search-result" alt="店舗画像">
 								</div>
 								<div class="col-8">
 									<div class="card-body">

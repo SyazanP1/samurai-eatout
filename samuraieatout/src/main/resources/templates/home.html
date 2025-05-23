@@ -44,9 +44,9 @@
 				<div th:each="restaurant : ${listRestaurants}">
 					<a th:href="@{/restaurant/details/__${restaurant.getId()}__}"
 						class="link-dark">
-						<div class="card">
+						<div class="card g-0 my-2" id="samurai-card-home">
 							<img th:src="@{/images/__${restaurant.getImageName()}__}"
-								alt="画像">
+								class="card-img-top" id="samurai-card-image-home" alt="画像">
 							<div class="card-body">
 								<h5 th:text="${restaurant.getName()}" class="card-title"></h5>
 								<p th:text="${restaurant.getFetures()}" class="card-text"></p>

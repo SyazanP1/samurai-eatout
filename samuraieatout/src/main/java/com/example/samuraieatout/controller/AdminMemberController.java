@@ -27,6 +27,7 @@ public class AdminMemberController {
 			@PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.ASC) Pageable pageable) {
 		
 		Page<Member> pageMember = adminMemberService.obtainMember(keywordName, pageable);
+		model.addAttribute("keywordName", keywordName);
 		model.addAttribute("pageMember", pageMember);
 		
 		return "admin/member/home";
