@@ -10,48 +10,59 @@
 		<!-- 会員登録フォーム -->
 		<div class="container">
 			<div class="row justify-content-center">
-				<div>
-					<form th:object="${confirmMemberForm}">
-						<input type="hidden" th:field="*{id}">
-						<div class="form-group">
+				<div class="col-4 py-4">
+					<div class="text-center mb-4">
+						<h2>会員情報</h2>
+					</div>
+					<div class="mb-5">
+						<form th:object="${confirmMemberForm}">
+							<input type="hidden" th:field="*{id}">
+							<div class="form-group">
+								<div class="row mb-3">
+									<div class="d-flex">
+										<label class="col-form-label col-3">氏名</label>
+										<div class="col-8">
+											<div th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
+												class="text-danger small"></div>
+											<input type="text" class="form-control" th:field="*{name}"
+												disabled>
+										</div>
+									</div>
+								</div>
+							</div>
 							<div class="row mb-3">
 								<div class="d-flex">
-									<label class="col-form-label col-3">氏名</label>
+									<label class="col-form-label col-3">メールアドレス</label>
 									<div class="col-8">
-										<div th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
-											class="text-danger small"></div>
-										<input type="text" class="form-control" th:field="*{name}"
+										<div th:if="${#fields.hasErrors('email')}"
+											th:errors="*{email}" class="text-danger small"></div>
+										<input type="text" class="form-control" th:field="*{email}"
 											disabled>
 									</div>
 								</div>
 							</div>
-						</div>
-						<div class="row mb-3">
-							<div class="d-flex">
-								<label class="col-form-label col-3">メールアドレス</label>
-								<div class="col-8">
-									<div th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
-										class="text-danger small"></div>
-									<input type="text" class="form-control" th:field="*{email}"
-										disabled>
-								</div>
-							</div>
-						</div>
-					</form>
-				</div>
-			</div>
+						</form>
+					</div>
 
-			<div class="row justify-content-center">
-				<a th:href="@{/editMember}">会員情報の編集</a>
-			</div>
-			<div class="row justify-content-center">
-				<a th:href="@{/member/changeEmail}">メールアドレスの変更</a>
-			</div>
-			<div class="row justify-content-center">
-				<a th:href="@{/member/resetPassword}">パスワードリセット</a>
-			</div>
-			<div th:if="${stripeUrl}" class="row justify-content-center">
-				<a th:href="@{__${stripeUrl}__}">支払情報の変更やサブスクの解約</a>
+
+
+					<div class="text-center">
+						<div class="mb-2">
+							<a th:href="@{/editMember}" class="btn btn-warning w-50">会員情報の編集</a>
+						</div>
+						<div class="mb-2">
+							<a th:href="@{/member/changeEmail}" class="btn btn-warning w-50">メールアドレスの変更</a>
+						</div>
+						<div class="mb-2">
+							<a th:href="@{/member/resetPassword}" class="btn btn-warning w-50">パスワードリセット</a>
+						</div>
+						<div th:if="${stripeUrl}" class="mb-2">
+							<a th:href="@{__${stripeUrl}__}" class="btn btn-warning w-50">サブスクの解約<br>クレジットカード情報の変更</a>
+						</div>
+					</div>
+
+				</div>
+
 			</div>
 		</div>
 	</main>

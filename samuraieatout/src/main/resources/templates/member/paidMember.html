@@ -8,17 +8,24 @@
 	<div th:replace="~{fragment :: header}"></div>
 	<main>
 
-		<div class="container justify-content-center">
-			<div class="row">
-				<h3>有料会員になるための決済画面</h3>
-			</div>
-			
-			<div class="row">
-				<a th:href="@{__${stripeUrl}__}">決済画面へ</a>
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-4 py-4">
+					<div class="text-center">
+						<h2 class="mb-4">有料会員へのアップグレード</h2>
+						<p>月額300円で店舗への来店予約機能や、<br>お気に入り機能をご利用いだけます。</p>
+						<p>以下ボタンから決済画面へ移動し、<br>クレジットカード情報の登録をお願いします。</p>
+						<div class="mt-5">
+							<a th:href="@{__${stripeUrl}__}" class="btn btn-warning w-50">決済画面へ</a>
+						</div>
+						<p>※決済画面は外部サイトとなります。</p>
+					</div>
+				</div>
 			</div>
 		</div>
 	</main>
 	<div th:replace="~{fragment :: script}"></div>
+	<div th:replace="~{fragment :: footer}"></div>
 </body>
 
 </html>

@@ -10,23 +10,27 @@
 		<!-- メールアドレス変更 -->
 		<div class="container">
 			<div class="row justify-content-center">
-
-					<form th:action="@{/member/changeEmail/input}" method="post"
-						th:object="${changeEmailForm}">
-						<div class="row mb-3">
-							<div class="d-flex">
-								<label class="col-form-label col-3">メールアドレス変更のため右のメールアドレス宛に認証用メールを送信します。</label>
-								<div class="col-8">
-									<div th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
-										class="text-danger small"></div>
-									<input type="text" class="form-control" th:field="*{email}">
-								</div>
+				<div class="col-4 py-4">
+					<div class="text-center">
+						<h2>メールアドレス変更</h2>
+						<p>
+							設定したいメールアドレスを入力してください。<br>認証用メールを送信します。
+						</p>
+					</div>
+					<div>
+						<form th:action="@{/member/changeEmail/input}" method="post"
+							th:object="${changeEmailForm}">
+							<div class="form-group mb-4">
+								<div th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
+									class="text-danger small"></div>
+								<input type="text" class="form-control" th:field="*{email}">
 							</div>
-						</div>
-						<div class="row mb-3">
-							<button type="submit" class="btn">送信</button>
-						</div>
-					</form>
+							<div class="form-group d-flex justify-content-center">
+								<button type="submit" class="btn btn-warning w-50">送信</button>
+							</div>
+						</form>
+					</div>
+				</div>
 			</div>
 		</div>
 	</main>

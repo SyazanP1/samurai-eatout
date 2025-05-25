@@ -9,71 +9,96 @@
 	<div th:replace="~{fragment :: header}"></div>
 	<main>
 		<div class="container">
-			<!-- レビュー表示 -->
-			<div class="row row-cols-2">
-<!--				<div th:each="reservation : ${pageReservations}">-->
-					<!--					<div class="card">-->
-					<!--						<div class="card-body">-->
-					<!--							<h5 class="card-title"></h5>	-->
-					<!--							<p class="card-text" th:text="${reservation.getRestaurant().getName()}"></p>-->
-					<!--							<p class="card-text" th:text="${reservation.getDate()}"></p>-->
-					<!--							<p class="card-text" th:text="${reservation.getNumber()} + 人"></p>-->
-					<!--						</div>-->
-					<!--					</div>-->
-					
-					<h1 class="text-center">予約一覧</h1>
-					
+			<div class="row justify-content-center">
+				<div class="col-7 py-4">
+					<!-- 予約一覧 -->
+
+					<h2 class="text-center">予約一覧</h2>
+
+					<div th:if="${deleteMessage}" class="alert alert-info">
+						予約を削除しました。</div>
 					<div th:if="${param.reserved}" class="alert alert-info">
-						予約が完了しました。	
-					</div>
-					
+						予約が完了しました。</div>
+
 					<table class="table">
 						<thead>
 							<tr>
 								<th scope="col">店舗名</th>
 								<th scope="col">日時</th>
 								<th scope="col">人数</th>
+								<th scope="col"></th>
 							</tr>
-						</thead>	
+						</thead>
 						<tbody>
 							<tr th:each="reservation : ${pageReservations}">
-								<td th:text="${reservation.getRestaurant().getName()}"></td>	
-<!--								<td th:text="${reservation.getDate()}"></td>	-->
-								<td th:text="${#dates.format(reservation.getDate(), 'yyyy年MM月dd日 HH:mm')}"></td>	
-								<td th:text="${reservation.getNumber()}"></td>	
-							</tr> 	
+								<!--									<td th:text="${reservation.getRestaurant().getName()}"></td>-->
+								<td><a
+									th:href="@{/restaurant/details/__${reservation.getRestaurant().getId()}__}"
+									th:text="${reservation.getRestaurant().getName()}"></a></td>
+								<td
+									th:text="${#dates.format(reservation.getDate(), 'yyyy年MM月dd日 HH:mm')}"></td>
+								<td th:text="${reservation.getNumber()}"></td>
+
+								<td><a href="#" data-bs-toggle="modal"
+									th:data-bs-target="${'#delete' + reservation.getId()}">削除</a></td>
+								<!-- 削除モーダル -->
+								<div class="modal fade" th:id="${'delete' + reservation.getId()}"
+									tabindex="-1"
+									th:aria-labelledby="${'#deleteLabel' + reservation.getId()}">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title"
+													th:id="${'deleteLabel' + reservation.getId()}"
+													th:text="${reservation.getRestaurant().getName() + 'の予約を削除しますか'}"></h5>
+												<button type="button" class="btn-close"
+													data-bs-dismiss="modal" aria-labe="閉じる"></button>
+											</div>
+											<div class="modal-footer">
+												<form method="post"
+													th:action="@{/reservation/delete/__${reservation.getId()}__}">
+													<button type="submit" class="btn btn-warning">削除</button>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</tr>
 						</tbody>
 					</table>
-<!--				</div>-->
-			</div>
-			<!-- ページネーション -->
-			<div th:if="${pageReservations.getTotalPages() > 1}"
-				class="d-flex justify-content-center">
-				<ul class="pagination">
-					<li class="page-item"><a th:if="${pageReservations.isFirst()}"
-						class="page-link disabled">前</a> <a
-						th:unless="${pageReservations.isFirst()}"
-						th:href="@{/review/list/__${restaurantId}__(page = ${pageReservations.getNumber()-1})}"
-						class="page-link">前</a></li>
-					<li
-						th:each="i : ${#numbers.sequence(0, pageReservations.getTotalPages()-1)}"
-						class="page-item"><a
-						th:if="${i == pageReservations.getNumber()}" th:text="${i+1}"
-						th:href="@{/review/list/__${restaurantId}__(page = ${i})}"
-						class="page-link disabled"></a> <a
-						th:unless="${i == pageReservations.getNumber()}" th:text="${i+1}"
-						th:href="@{/review/list/__${restaurantId}__(page = ${i})}"
-						class="page-link"></a></li>
-					<li class="page-item"><a th:if="${pageReservations.isLast()}"
-						class="page-link disabled">次</a> <a
-						th:unless="${pageReservations.isLast()}"
-						th:href="@{/review/list/__${restaurantId}__(page = ${pageReservations.getNumber()+1})}"
-						class="page-link">次</a></li>
-				</ul>
+					<!--				</div>-->
+					<!-- ページネーション -->
+					<div th:if="${pageReservations.getTotalPages() > 1}"
+						class="d-flex justify-content-center">
+						<ul class="pagination">
+							<li class="page-item"><a
+								th:if="${pageReservations.isFirst()}" class="page-link disabled">前</a>
+								<a th:unless="${pageReservations.isFirst()}"
+								th:href="@{/reservation/list(page = ${pageReservations.getNumber()-1})}"
+								class="page-link">前</a></li>
+							<li
+								th:each="i : ${#numbers.sequence(0, pageReservations.getTotalPages()-1)}"
+								class="page-item"><a
+								th:if="${i == pageReservations.getNumber()}" th:text="${i+1}"
+								th:href="@{/reservation/list(page = ${i})}"
+								class="page-link disabled"></a> <a
+								th:unless="${i == pageReservations.getNumber()}"
+								th:text="${i+1}"
+								th:href="@{/reservation/list(page = ${i})}"
+								class="page-link"></a></li>
+							<li class="page-item"><a
+								th:if="${pageReservations.isLast()}" class="page-link disabled">次</a>
+								<a th:unless="${pageReservations.isLast()}"
+								th:href="@{/reservation/list(page = ${pageReservations.getNumber()+1})}"
+								class="page-link">次</a></li>
+						</ul>
+					</div>
+				</div>
 			</div>
 		</div>
 	</main>
 	<div th:replace="~{fragment :: script}"></div>
+	<div th:replace="~{fragment :: footer}"></div>
 </body>
 
 </html>

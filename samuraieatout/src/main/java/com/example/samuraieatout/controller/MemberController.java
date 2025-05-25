@@ -269,6 +269,8 @@ public class MemberController {
 			BindingResult bindingResult,
 			@AuthenticationPrincipal UserDetailsImpl userDetailsImpl, RedirectAttributes redirectAttributes,
 			HttpServletRequest httpServletRequest) {
+		
+		bindingResult = memberService.addErrorBindingResult(bindingResult, changeEmailForm.getEmail(), null, null);
 
 		if (bindingResult.hasErrors()) {
 			return "member/changeEmail";

@@ -15,7 +15,10 @@ import com.example.samuraieatout.entity.Restaurant;
 import com.example.samuraieatout.form.RestaurantEditForm;
 import com.example.samuraieatout.form.RestaurantRegistForm;
 import com.example.samuraieatout.repository.CategoryRepository;
+import com.example.samuraieatout.repository.FavoriteRepository;
+import com.example.samuraieatout.repository.ReservationRepository;
 import com.example.samuraieatout.repository.RestaurantRepository;
+import com.example.samuraieatout.repository.ReviewRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -23,10 +26,16 @@ import jakarta.transaction.Transactional;
 public class AdminRestaurantService {
 	private RestaurantRepository restaurantRepository;
 	private CategoryRepository categoryRepository;
+	private ReviewRepository reviewRepository;
+	private ReservationRepository reservationRepository;
+	private FavoriteRepository favoriteRepository;
 
-	public AdminRestaurantService(RestaurantRepository restaurantRepository, CategoryRepository categoryRepository) {
+	public AdminRestaurantService(RestaurantRepository restaurantRepository, CategoryRepository categoryRepository, ReviewRepository reviewRepository, ReservationRepository reservationRepository, FavoriteRepository favoriteRepository) {
 		this.restaurantRepository = restaurantRepository;
 		this.categoryRepository = categoryRepository;
+		this.reviewRepository = reviewRepository;
+		this.reservationRepository = reservationRepository;
+		this.favoriteRepository = favoriteRepository;
 	}
 
 	//	店舗一覧を表示
@@ -114,6 +123,11 @@ public class AdminRestaurantService {
 	@Transactional
 	public void deleteRestaurant(Integer restaurantId) {
 		Restaurant restaurant = restaurantRepository.getReferenceById(restaurantId);
+		//	restaurantのidが外部キーとなっている他テーブルのレコードを左記に削除
+		//	これをしないと外部キーエラーでrestaurantのテーブルを削除できない
+		reviewRepository.deleteByRestaurant(restaurant);
+		reservationRepository.deleteByRestaurant(restaurant);
+		favoriteRepository.deleteByRestaurant(restaurant);
 		restaurantRepository.delete(restaurant);
 	}
 	

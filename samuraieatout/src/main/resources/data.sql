@@ -15,27 +15,6 @@ INSERT IGNORE INTO restaurants VALUES (6,5,'店舗名その6','image6.jpg','住�
 INSERT IGNORE INTO restaurants VALUES (7,5,'店舗名その7','image7.jpg','住所その7','店舗の特徴について7');
 INSERT IGNORE INTO restaurants VALUES (8,1,'店舗名その8','image8.jpg','住所その8','店舗の特徴について8');
 INSERT IGNORE INTO restaurants VALUES (9,1,'店舗名その9','image9.jpg','住所その9','店舗の特徴について9');
-INSERT IGNORE INTO restaurants VALUES (10,1,'店舗名その10','image10.jpg','住所その10','店舗の特徴について10');
-INSERT IGNORE INTO restaurants VALUES (11,1,'店舗名その11','image11.jpg','住所その11','店舗の特徴について11');
-INSERT IGNORE INTO restaurants VALUES (12,1,'店舗名その12','image12.jpg','住所その12','店舗の特徴について12');
-INSERT IGNORE INTO restaurants VALUES (13,1,'店舗名その13','image13.jpg','住所その13','店舗の特徴について13');
-INSERT IGNORE INTO restaurants VALUES (14,1,'店舗名その14','image14.jpg','住所その14','店舗の特徴について14');
-INSERT IGNORE INTO restaurants VALUES (15,1,'店舗名その15','image15.jpg','住所その15','店舗の特徴について15');
-INSERT IGNORE INTO restaurants VALUES (16,1,'店舗名その16','image16.jpg','住所その16','店舗の特徴について16');
-INSERT IGNORE INTO restaurants VALUES (17,3,'店舗名その17','image17.jpg','住所その17','店舗の特徴について17');
-INSERT IGNORE INTO restaurants VALUES (18,3,'店舗名その18','image18.jpg','住所その18','店舗の特徴について18');
-INSERT IGNORE INTO restaurants VALUES (19,3,'店舗名その19','image19.jpg','住所その19','店舗の特徴について19');
-INSERT IGNORE INTO restaurants VALUES (20,3,'店舗名その20','image20.jpg','住所その20','店舗の特徴について20');
-INSERT IGNORE INTO restaurants VALUES (21,3,'店舗名その21','image21.jpg','住所その21','店舗の特徴について21');
-INSERT IGNORE INTO restaurants VALUES (22,3,'店舗名その22','image22.jpg','住所その22','店舗の特徴について22');
-INSERT IGNORE INTO restaurants VALUES (23,3,'店舗名その23','image23.jpg','住所その23','店舗の特徴について23');
-INSERT IGNORE INTO restaurants VALUES (24,3,'店舗名その24','image24.jpg','住所その24','店舗の特徴について24');
-INSERT IGNORE INTO restaurants VALUES (25,3,'店舗名その25','image25.jpg','住所その25','店舗の特徴について25');
-INSERT IGNORE INTO restaurants VALUES (26,3,'店舗名その26','image26.jpg','住所その26','店舗の特徴について26');
-INSERT IGNORE INTO restaurants VALUES (27,3,'店舗名その27','image27.jpg','住所その27','店舗の特徴について27');
-INSERT IGNORE INTO restaurants VALUES (28,4,'店舗名その28','image28.jpg','住所その28','店舗の特徴について28');
-INSERT IGNORE INTO restaurants VALUES (29,4,'店舗名その29','image29.jpg','住所その29','店舗の特徴について29');
-INSERT IGNORE INTO restaurants VALUES (30,4,'店舗名その30','image30.jpg','住所その30','店舗の特徴について30');
 
 --authorities
 INSERT IGNORE INTO authorities VALUES (1,'FREE');

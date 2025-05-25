@@ -15,6 +15,8 @@ import com.example.samuraieatout.repository.MemberRepository;
 import com.example.samuraieatout.repository.ReservationRepository;
 import com.example.samuraieatout.repository.RestaurantRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class ReservationService {
 	private final RestaurantRepository restaurantRepository;
@@ -61,5 +63,12 @@ public class ReservationService {
 	public Page<Reservation> obtainAllReservation(Member member, Pageable pageable){
 		Page<Reservation> pageReservations = reservationRepository.findByMemberOrderByDateAsc(member, pageable);
 		return pageReservations;
+	}
+	
+	//	削除
+	@Transactional
+	public void deleteReservation(Integer reservationId) {
+		Reservation reservation = reservationRepository.getReferenceById(reservationId);
+		reservationRepository.delete(reservation);
 	}
 }

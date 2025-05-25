@@ -20,4 +20,8 @@ public interface ReviewRepository extends JpaRepository<Review, Integer>{
 	
 	//	レビュー一覧ページで表示するレビューを取得
 	Page<Review> findByRestaurantOrderByUpdatedAt(Restaurant restaurant, Pageable pageable);
+	
+	//	店舗削除時、同時に削除対象となるレコードを取得
+//	Review findByRestaurant(Restaurant restaurant);
+	Integer deleteByRestaurant(Restaurant restaurant);
 }

@@ -102,6 +102,22 @@
 						</div>
 					</div>
 				</div>
+				<div sec:authorize="isAnonymous()" class="col-md-4">
+					<div class="card text-center">
+						<div class="card-body">
+							<span>有料会員になると<br>予約機能がご利用いただけます。</span>
+							<div><a th:href="@{/signup}" class="btn btn-outline-warning">会員登録</a></div>
+						</div>
+					</div>
+				</div>
+				<div sec:authorize="hasAuthority('FREE')" class="col-md-4">
+					<div class="card text-center">
+						<div class="card-body">
+							<span>有料会員になると<br>予約機能をご利用いただけます。</span>
+							<div><a th:href="@{/paidMember}" class="btn btn-outline-warning">有料会員へアップグレード</a></div>
+						</div>
+					</div>
+				</div>
 			</div>
 			<!-- ログイン者のレビュー-->
 			<div th:if="${myReview}" class="mb-3">
@@ -111,19 +127,6 @@
 				<div class="row row-cols-md-2">
 					<div th:if="${myReview}" class="col">
 						<div class="card">
-							<!--						<div class="card-body">-->
-							<!--							<div class="d-flex justify-content-between">-->
-							<!--								<div>-->
-							<!--									<h5 th:text="${myReview.getMember().getName()}"></h5>-->
-							<!--									<p th:text="${myReview.getScore()}"></p>-->
-							<!--									<p th:text="${myReview.getContent()}"></p>-->
-							<!--								</div>-->
-							<!--								<div>-->
-							<!--									<a th:href="@{/review/edit/__${myReview.getId()}__}">編集</a> <a-->
-							<!--										href="#" data-bs-toggle="modal" data-bs-target="#delete-modal">削除</a>-->
-							<!--								</div>-->
-							<!--							</div>-->
-							<!--						</div>-->
 							<div class="card-header d-flex justify-content-between">
 								<div>
 									<span th:text="${myReview.getMember().getName()}"></span>
@@ -173,11 +176,6 @@
 				class="row row-cols-md-2 g-4">
 				<div th:each="review : ${listReview}" class="col">
 					<div class="card">
-						<!--					<div class="card-body">-->
-						<!--						<h5 th:text="${review.getMember().getName()}"></h5>-->
-						<!--						<p th:text="${review.getScore()}"></p>-->
-						<!--						<p th:text="${review.getContent()}"></p>-->
-						<!--					</div>-->
 						<div class="card-header d-flex justify-content-between">
 							<div>
 								<span th:text="${review.getMember().getName()}"></span>
@@ -187,7 +185,7 @@
 							<li class="list-group-item"><span>スコア：</span><span
 								th:text="${review.getScore()}"></span></li>
 							<li class="list-group-item"><span
-								th:text="${review.getContent()}"></span> </spna></li>
+								th:text="${review.getContent()}"></span></li>
 						</ul>
 					</div>
 				</div>
@@ -201,7 +199,7 @@
 						th:href="@{/review/list/__${restaurant.getId()}__}">レビュー一覧</a>
 				</div>
 				<!-- レビュー書込みリンク-->
-				<div th:unless="${myReview}"
+				<div th:unless="${myReview}" sec:authorize="hasAuthority('PAID')"
 					class="col d-flex justify-content-center">
 					<a class="btn btn-outline-warning btn-sm"
 						th:href="@{/review/input/__${restaurant.getId()}__}">レビューを書き込む</a>
@@ -211,6 +209,7 @@
 	</main>
 	<div th:replace="~{fragment :: script}"></div>
 	<div th:replace="~{fragment :: flatpickr_script}"></div>
+	<div th:replace="~{fragment :: footer}"></div>
 </body>
 
 </html>

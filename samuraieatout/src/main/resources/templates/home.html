@@ -9,14 +9,19 @@
 <body>
 	<div th:replace="~{fragment :: header}"></div>
 	<main>
-		<!-- ログインメッセージ -->
-		<div class="container">
-			<div th:if="${param.loggedIn}" class="alert alert-info">
-				ログインしました。</div>
-		</div>
 		<!-- ビッグイメージ -->
 		<div class="container-fluid img-hidden p-0" id="samurai-big-image">
 			<img src="images/image3.jpg" class="img-fluid">
+		</div>
+		<!-- ログアウトメッセージ -->
+		<div class="container mt-2">
+			<div th:if="${param.loggedOut}" class="alert alert-info">
+				ログアウトしました。</div>
+		</div>
+		<!-- ログインメッセージ -->
+		<div class="container mt-2">
+			<div th:if="${param.loggedIn}" class="alert alert-info">
+				ログインしました。</div>
 		</div>
 		<!-- 検索フォーム -->
 		<div class="bg-light mb-4">
@@ -58,6 +63,7 @@
 		</div>
 	</main>
 	<div th:replace="~{fragment :: script}"></div>
+	<div th:replace="~{fragment :: footer}"></div>
 </body>
 
 </html>

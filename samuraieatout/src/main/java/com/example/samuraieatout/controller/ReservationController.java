@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.samuraieatout.entity.Category;
 import com.example.samuraieatout.entity.Reservation;
@@ -25,6 +26,7 @@ import com.example.samuraieatout.form.ReservationConfirmForm;
 import com.example.samuraieatout.form.ReservationInputForm;
 import com.example.samuraieatout.repository.CategoryRepository;
 import com.example.samuraieatout.security.UserDetailsImpl;
+import com.example.samuraieatout.security.UserDetailsServiceImpl;
 import com.example.samuraieatout.service.ReservationService;
 import com.example.samuraieatout.service.RestaurantService;
 import com.example.samuraieatout.service.ReviewService;
@@ -104,5 +106,16 @@ public class ReservationController {
 		Page<Reservation> pageReservations = reservationService.obtainAllReservation(userDetailsImpl.getMember(), pageable);
 		model.addAttribute("pageReservations", pageReservations);
 		return "reservation/list";
+	}
+	
+	@PostMapping("/delete/{reservationId}")
+	public String deleteReservation(@PathVariable(name = "reservationId") Integer reservationId,
+			@AuthenticationPrincipal UserDetailsServiceImpl userDetailsImpl,
+			RedirectAttributes redirectAttributes) {
+		
+		reservationService.deleteReservation(reservationId);
+		
+		redirectAttributes.addFlashAttribute("deleteMessage", "予約を削除しました。");
+		return "redirect:/reservation/list";
 	}
 }

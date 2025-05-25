@@ -13,4 +13,8 @@ public interface FavoriteRepository extends JpaRepository<Favorite, Integer>{
 	Favorite findByMemberAndRestaurant(Member member, Restaurant restaurant);
 	
 	Page<Favorite> findByMemberOrderByIdAsc(Member member, Pageable pageable);
+
+	//	店舗削除時、同時に削除対象となるレコードを取得
+//	Favorite findByRestaurant(Restaurant restaurant);
+	Integer deleteByRestaurant(Restaurant restaurant);
 }

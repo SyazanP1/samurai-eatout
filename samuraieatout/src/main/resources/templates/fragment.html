@@ -20,6 +20,13 @@
 
 	<!-- css読み込み -->
 	<link rel="stylesheet" th:href="@{/css/style.css}">
+
+	<!-- フォント読み込み -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+		href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital@0;1&family=Noto+Sans+JP&display=swap"
+		rel="stylesheet">
 </div>
 
 <!-- flatpickr_link要素の部品化 -->
@@ -119,15 +126,15 @@
 		<div class="bg-light mb-4">
 			<div class="container">
 				<h5 class="my-2">店舗名やカテゴリから探す</h5>
-				<form method="get" th:action="@{/restaurant/search}">
+				<form id="searchForm" method="get" th:action="@{/restaurant/search}">
 					<div class="input-group">
-						<input type="text" name="keywordName" placeholder="店舗名"> <select
-							name="keyidCategory" class="form-select">
-							<option selected value="">
-								<p>カテゴリ</p>
-							</option>
+						<input type="text" name="keywordName" th:value="${keywordName}"
+							placeholder="店舗名"> <select name="keyidCategory"
+							class="form-select">
+							<option value="">全てのカテゴリ</option>
 							<option th:each="category : ${listCategories}"
-								th:value="${category.getId()}" th:text="${category.getName()}">
+								th:value="${category.getId()}" th:text="${category.getName()}"
+								th:selected="${category.getId()} == ${keyidCategory}">
 							</option>
 						</select>
 						<button type="submit">検索</button>
@@ -150,5 +157,14 @@
 		<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 		<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
 		<script src="/js/flatpickr.js"></script>
+	</div>
+
+	<!-- フッターの部品化 -->
+	<div th:fragment="footer" th:remove="tag">
+		<footer class="bg-light">
+			<div class="d-flex justify-content-center">
+				<p>SAMURAI EATOUT</p>
+			</div>
+		</footer>
 	</div>
 </body>

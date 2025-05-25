@@ -13,52 +13,47 @@
 	<main>
 		<!-- レビュー登録フォーム -->
 		<div class="container">
-			<div class="row">
-				<!-- エラー原因究明のため表示 -->
-<!--				<div th:if="${#fields.hasAnyErrors()}" class="alert alert-dange">-->
-<!--					<ul>-->
-<!--						<li th:each="err : ${#fields.allErrors()}" th:text="${err}">-->
-<!--					</ul>-->
-<!--				</div>-->
-				<h5>レビュー登録</h5>
-				<div>
-					<form th:action="@{/review/regist}" method="post"
-						th:object="${registForm}">
-<!--						th:object="${reviewRegistForm}">-->
-						<input type="hidden" th:field="*{restaurant.id}">
-						<!-- 修正点: restaurant.id -->
+			<div class="row justify-content-center">
+				<div class="col-4 py-4">
+					<div class="text-center">
+						<h2>レビュー登録</h2>
+					</div>
+					<div>
+						<form th:action="@{/review/regist}" method="post"
+							th:object="${registForm}">
+							<input type="hidden" th:field="*{restaurant.id}">
 
-						<!-- 点数選択 -->
-						<div class="form-group">
-							<div class="row mb-3">
-								<label class="col-form-label col-2">点数</label> <select
-									class="form-select-sm col-1" th:field="*{score}">
-									<option value="">選択してください</option>
-									<!-- 必須バリデーション用 -->
-									<option th:each="i : ${#numbers.sequence(1,5)}" th:value="${i}"
-										th:text="${i}"></option>
-								</select>
-								<!-- エラーメッセージ表示 -->
-								<small class="text-danger" th:if="${#fields.hasErrors('score')}"
-									th:errors="*{score}"></small>
+							<!-- 点数選択 -->
+							<div class="form-group">
+								<div class="row mb-3">
+									<!-- エラーメッセージ表示 -->
+									<small class="text-danger"
+										th:if="${#fields.hasErrors('score')}" th:errors="*{score}"></small>
+									<label class="col-form-label col-2">点数</label> <select
+										class="form-select-sm col-5" th:field="*{score}">
+										<option value="">選択してください</option>
+										<option th:each="i : ${#numbers.sequence(1,5)}"
+											th:value="${i}" th:text="${i}"></option>
+									</select>
+								</div>
+
+								<!-- 内容入力 -->
+								<div class="row mb-3">
+									<!-- エラーメッセージ表示 -->
+									<small class="text-danger"
+										th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></small>
+									<label class="col-form-label col-2">内容</label>
+									<textarea class="col-form-control col-10" rows="10"
+										th:field="*{content}"></textarea>
+								</div>
+
+								<div class="form-group text-center mt-5">
+									<button type="submit" class="btn btn-warning w-50">登録する</button>
+								</div>
 							</div>
+						</form>
 
-							<!-- 内容入力 -->
-							<div class="row mb-3">
-								<label class="col-form-label col-2">内容</label>
-								<textarea class="col-form-control col-10" rows="10"
-									th:field="*{content}"></textarea>
-								<!-- エラーメッセージ表示 -->
-								<small class="text-danger"
-									th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></small>
-							</div>
-
-							<div class="form-group text-center mt-5">
-								<button type="submit" class="btn-dark">登録する</button>
-							</div>
-						</div>
-					</form>
-
+					</div>
 				</div>
 			</div>
 		</div>

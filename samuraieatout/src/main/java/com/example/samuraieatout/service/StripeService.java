@@ -86,13 +86,14 @@ public class StripeService {
 	public String createEditPaidUrl(Member member, HttpServletRequest httpServletRequest) throws StripeException {
 		Stripe.apiKey = stripeApiKey;
 		String requestUrl = new String(httpServletRequest.getRequestURL());
-		String setUrl = "";
-		if (requestUrl.contains("edit")) {
-			setUrl = requestUrl.replaceAll("/editMember", "") + "/logout";
-		} else {
-			setUrl = requestUrl.replaceAll("/updateMember", "") + "/logout";
-		}
-		
+		//		String setUrl = "";
+		//		if (requestUrl.contains("confirm")) {
+		//			setUrl = requestUrl.replaceAll("/confirmMember", "") + "/logout";
+		//		} else {
+		//			setUrl = requestUrl.replaceAll("/updateMember", "") + "/logout";
+		//		}
+		String setUrl = requestUrl.replaceAll("/confirmMember", "") + "/logout";
+
 		LocalStripe localStripe = localStripeRepository.findByMember(member);
 
 		//	import文に記述するとエラー「インポート com.stripe.param.billingportal.SessionCreateParams は、別の import 文と一致しません」が発生
@@ -101,7 +102,7 @@ public class StripeService {
 				//	テスト用に固定値を入れている
 				//				.setCustomer("cus_SF2y5SPZAWZl9Q")
 				.setCustomer(localStripe.getCustomerId())
-//				.setReturnUrl(requestUrl.replaceAll("/editMember", "") + "/home")
+				//				.setReturnUrl(requestUrl.replaceAll("/editMember", "") + "/home")
 				.setReturnUrl(setUrl)
 				.build();
 
@@ -133,11 +134,10 @@ public class StripeService {
 			//	権限を有料会員に更新
 			//			updatePaidAuthority(memberRepository.findByEmail(customerEmail));
 			updatePaidAuthority(member);
-			
 
-//			Member updatedMember = memberRepository.getReferenceById(memberId);
+			//			Member updatedMember = memberRepository.getReferenceById(memberId);
 			//	SecurityContextを更新
-//			authService.updateSecurityContext(updatedMember);
+			//			authService.updateSecurityContext(updatedMember);
 
 			//	Stripe情報をローカルに保存
 			//			addLocalStripeRecord(subscriptionId, customerId, memberRepository.findByEmail(customerEmail));
@@ -164,9 +164,9 @@ public class StripeService {
 			Member member = memberRepository.getReferenceById(memberId);
 			updateFreeAuthority(member);
 			disableSubscription(member);
-			
+
 			//	SecurityContextを更新
-//			authService.updateSecurityContext(member);
+			//			authService.updateSecurityContext(member);
 		}
 
 	}
@@ -201,11 +201,11 @@ public class StripeService {
 		memberRepository.save(member);
 
 	}
-	
+
 	//	ローカルStripeを無効化
 	@Transactional
 	public void disableSubscription(Member member) {
-		
+
 		LocalStripe localStripe = localStripeRepository.findByMember(member);
 		localStripe.setEnable(false);
 		localStripeRepository.save(localStripe);
