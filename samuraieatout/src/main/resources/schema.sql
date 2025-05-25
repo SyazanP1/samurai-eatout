@@ -1,7 +1,8 @@
 CREATE TABLE IF NOT EXISTS categories
 (
    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-   name VARCHAR (20) NOT NULL
+   name VARCHAR (20) NOT NULL,
+   enable Boolean NOT NULL
 );
 CREATE TABLE IF NOT EXISTS restaurants
 (
