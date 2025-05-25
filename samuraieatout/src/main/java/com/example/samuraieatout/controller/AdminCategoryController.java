@@ -46,14 +46,14 @@ public class AdminCategoryController {
 		CategoryRegistForm categoryRegistForm = new CategoryRegistForm();
 		model.addAttribute("categoryRegistForm", categoryRegistForm);
 		
-		return "/admin/category/regist";
+		return "admin/category/regist";
 	}
 	
 	@PostMapping("/regist")
 	public String registCategory(@ModelAttribute @Validated CategoryRegistForm categoryRegistForm,
 			BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
 		if (bindingResult.hasErrors()) {
-			return "/admin/category/regist";
+			return "admin/category/regist";
 		}
 		adminCategoryService.registCategory(categoryRegistForm);
 		redirectAttributes.addFlashAttribute("registMessage", "カテゴリが新規登録されました。");
@@ -67,14 +67,14 @@ public class AdminCategoryController {
 		CategoryEditForm categoryEditForm = new CategoryEditForm(categoryId, category.getName(), category.getEnable());
 		model.addAttribute("categoryEditForm", categoryEditForm);
 		
-		return "/admin/category/edit";
+		return "admin/category/edit";
 	}
 	
 	@PostMapping("/update")
 	public String updateCategory(@ModelAttribute @Validated CategoryEditForm categoryEditForm,
 			BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
 		if (bindingResult.hasErrors()) {
-			return "/admin/category/edit";
+			return "admin/category/edit";
 		}
 		adminCategoryService.updateCategory(categoryEditForm);
 		redirectAttributes.addFlashAttribute("updateMessage", "カテゴリが更新されました。");

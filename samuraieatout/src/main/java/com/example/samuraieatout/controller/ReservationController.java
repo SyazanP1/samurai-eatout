@@ -76,7 +76,7 @@ public class ReservationController {
 			model.addAttribute("restaurant", restaurant);
 			model.addAttribute("category", category);
 			model.addAttribute("listReview", listReview);
-			return "/restaurant/details";
+			return "restaurant/details";
 		}
 		
 		//	日付からTを取り除いた表示用の日付
@@ -85,7 +85,7 @@ public class ReservationController {
 
 		model.addAttribute("reservationConfirmForm", reservationConfirmForm);
 		model.addAttribute("stringDate", stringDate);
-		return "/reservation/confirm";
+		return "reservation/confirm";
 	}
 	
 	@PostMapping("/confirm")

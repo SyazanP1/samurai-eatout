@@ -244,7 +244,7 @@ public class MemberController {
 		//	バリデーションの追加が必要
 		if (bindingResult.hasErrors()) {
 
-			return "/member/resetPassword";
+			return "member/resetPassword";
 		}
 
 		memberService.updateResetPassword(userDetailsImpl.getMember(), resetPasswordForm.getPassword());
