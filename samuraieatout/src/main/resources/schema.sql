@@ -9,11 +9,15 @@ CREATE TABLE IF NOT EXISTS restaurants
    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
    category_id INT,
    name VARCHAR (50) NOT NULL,
-   image_name VARCHAR (256) NOT NULL,
+   image_name VARCHAR (256),
    address VARCHAR (50) NOT NULL,
    fetures VARCHAR (200),
    FOREIGN KEY (category_id) REFERENCES categories (id)
 );
+-- Null許容のため(Heroku上のDBにアクセスできないためここで行う
+ALTER TABLE `restaurants` 
+CHANGE COLUMN `image_name` `image_name` VARCHAR(256);
+
 CREATE TABLE IF NOT EXISTS authorities
 (
    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
