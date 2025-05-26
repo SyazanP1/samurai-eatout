@@ -34,9 +34,11 @@
 			</div>
 			<!-- 店舗詳細 -->
 			<!-- 画像 -->
-			<div class="row">
-				<img th:src="@{/images/__${restaurant.getImageName()}__}"
-					class="img-fluid" id="samurai-details-image">
+			<div class="row d-flex justify-content-center">
+				<div class="image-wrapper">
+					<img th:src="@{/images/__${restaurant.getImageName()}__}"
+						class="img-fluid" id="samurai-details-image" alt="店舗画像">
+				</div>
 			</div>
 			<div class="row align-items-center my-2">
 				<!-- 店舗説明 -->
@@ -105,16 +107,22 @@
 				<div sec:authorize="isAnonymous()" class="col-md-4">
 					<div class="card text-center">
 						<div class="card-body">
-							<span>有料会員になると<br>予約機能がご利用いただけます。</span>
-							<div><a th:href="@{/signup}" class="btn btn-outline-warning">会員登録</a></div>
+							<span>有料会員になると<br>予約機能がご利用いただけます。
+							</span>
+							<div>
+								<a th:href="@{/signup}" class="btn btn-outline-warning">会員登録</a>
+							</div>
 						</div>
 					</div>
 				</div>
 				<div sec:authorize="hasAuthority('FREE')" class="col-md-4">
 					<div class="card text-center">
 						<div class="card-body">
-							<span>有料会員になると<br>予約機能をご利用いただけます。</span>
-							<div><a th:href="@{/paidMember}" class="btn btn-outline-warning">有料会員へアップグレード</a></div>
+							<span>有料会員になると<br>予約機能をご利用いただけます。
+							</span>
+							<div>
+								<a th:href="@{/paidMember}" class="btn btn-outline-warning">有料会員へアップグレード</a>
+							</div>
 						</div>
 					</div>
 				</div>

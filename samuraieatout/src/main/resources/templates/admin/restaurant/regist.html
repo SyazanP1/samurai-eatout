@@ -31,8 +31,6 @@
 								<div class="d-flex">
 									<label class="col-form-label col-3" for="imageFile">店舗画像</label>
 									<div class="col-8">
-										<div th:if="${#fields.hasErrors('imageFile')}" th:errors="*{imageFile}"
-											class="text-danger small"></div>
 										<input type="file" class="form-control" th:field="*{imageFile}">
 									</div>
 								</div>
