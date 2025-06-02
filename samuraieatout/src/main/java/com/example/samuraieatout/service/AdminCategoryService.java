@@ -71,5 +71,13 @@ public class AdminCategoryService {
 
 		categoryRepository.save(category);
 	}
+	
+	//	非同期更新
+	@Transactional
+	public void ajaxUpdateCategory(Integer categoryId, String categoryName) {
+		Category category = categoryRepository.getReferenceById(categoryId);
+		category.setName(categoryName);
+		categoryRepository.save(category);
+	}
 
 }

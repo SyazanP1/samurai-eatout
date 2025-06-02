@@ -5,6 +5,10 @@
 
 <div th:replace="~{fragment :: link}"></div>
 
+<meta name="_csrf" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:content="${_csrf.headerName}" />
+
+
 <body>
 
 	<div th:replace="~{fragment :: header}"></div>
@@ -48,7 +52,15 @@
 				<tbody>
 					<tr th:each="category : ${pageCategory}">
 						<td th:text="${category.getId()}"></td>
-						<td th:text="${category.getName()}"></td>
+						<!--						<td th:text="${category.getName()}"></td>-->
+						<td>
+							<form method="post">
+<!--								<input id="categoryId" type="hidden"-->
+<!--									th:value="${category.getId()}"> -->
+									<input
+									class="categoryName" th:data-id="${category.getId()}" th:value="${category.getName()}">
+							</form>
+						</td>
 						<td th:if="${category.getEnable() == true}">有効</td>
 						<td th:if="${category.getEnable() == false}">無効</td>
 						<td><a
@@ -110,6 +122,45 @@
 		</div>
 	</main>
 	<div th:replace="~{fragment :: script}"></div>
+	<script th:inline="javascript">
+<!--		const inputCategoryName = document.getElementById("categoryName");-->
+		
+			document.querySelectorAll('.categoryName').forEach(input => {
+				input.addEventListener("blur", (event) => {
+					
+					
+					const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+					const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+					
+					const data = {
+						categoryId : input.getAttribute('data-id'),
+						categoryName : input.value
+					};
+
+					fetch(/*[[@{/admin/category/ajaxUpdate}]]*/"", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+							[csrfHeader]: csrfToken
+						},
+						body: JSON.stringify(data)
+					})
+					
+					.then(response => response.text())
+					.then(result => {
+						console.log("サーバーからの応答：", result);
+					})
+					.catch(error => {
+						console.log("エラーが発生しました:", error);
+					});
+					
+					
+				});
+				
+			});
+
+		
+	</script>
 	<div th:replace="~{fragment :: footer}"></div>
 </body>
 
